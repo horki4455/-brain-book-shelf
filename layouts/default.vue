@@ -8,3 +8,8 @@
     </v-app-bar>
   </v-app>
 </template>
+<style scoped>
+.v-application {
+  background-color: white;
+}
+</style>
