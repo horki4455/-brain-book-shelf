@@ -27,10 +27,7 @@
 
     <span>
       <div class="my-3">
-        <v-icon>
-          mdi-chevron-triple-right
-          Google @Google
-        </v-icon>本一覧情報
+        <v-icon>mdi-chevron-triple-right</v-icon>本一覧情報
       </div>
     </span>
     <!-- TODO：バリデーションかける -->
@@ -40,7 +37,7 @@
       hide-details
       v-model="search"
       outlined
-      class="ma-2"
+      class="my-5"
     ></v-text-field>
     <v-app>
       <v-container>
@@ -50,11 +47,13 @@
           class="elevation-10"
           :filter="filter"
           :search="search"
+          outlined
+          @click:row="onClickEvent"
         >
           <template slot="items" slot-scope="row">
             <td>{{row.item.name}}</td>
             <td>{{row.item.score}}</td>
-            <td>{{row.item.birthplace}}</td>
+            <td>{{row.item.kind}}</td>
           </template>
         </v-data-table>
       </v-container>
@@ -62,32 +61,31 @@
   </div>
 </template>
 <script lang="ts">
-import { ref } from '@vue/composition-api'
-export default {
-  setup() {
+import { ref, defineComponent } from '@vue/composition-api'
+export default defineComponent({
+  setup(_, context) {
+    const router = context.root.$router
     // テーブルに関するデータ
     const header = [
-      { text: '名前', value: 'name' },
-      { text: '点数', value: 'score' },
-      { text: '出身地', value: 'birthplace' },
+      { text: 'タイトル', value: 'name' },
+      { text: 'ページ数', value: 'score' },
+      { text: 'ジャンル', value: 'kind' },
     ]
     const tableItems = [
-      { name: '柴山はるみ', score: 51, birthplace: '大阪府' },
-      { name: '岡田雅彦', score: 48, birthplace: '宮崎県' },
-      { name: '若槻建', score: 67, birthplace: '長野県' },
-      { name: '宮下詩織', score: 23, birthplace: '大阪府' },
-      { name: '車慎之介', score: 43, birthplace: '岡山県' },
-      { name: '武藤里穂', score: 79, birthplace: '大阪府' },
-      { name: '金子宏行', score: 82, birthplace: '神奈川県' },
-      { name: '草野彩華', score: 12, birthplace: '静岡県' },
-      { name: '海音寺薫', score: 45, birthplace: '群馬県' },
-      { name: '堤咲', score: 100, birthplace: '兵庫県' },
+      { id: 1, name: '柴山はるみ', score: 51, kind: '大阪府' },
+      { id: 2, name: '岡田雅彦', score: 48, kind: '宮崎県' },
+      { id: 3, name: '若槻建', score: 67, kind: '長野県' },
+      { id: 4, name: '宮下詩織', score: 23, kind: '大阪府' },
+      { id: 5, name: '車慎之介', score: 43, kind: '岡山県' },
     ]
     const search = ref('')
     const dialog = ref(false)
+    const onClickEvent = () => {
+      router.push('books/78')
+    }
 
-    return { header, tableItems, search, dialog }
+    return { header, tableItems, search, dialog, onClickEvent }
   },
-}
+})
 </script>
 <style></style>

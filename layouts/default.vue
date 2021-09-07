@@ -2,7 +2,7 @@
   <div>
     <v-app class="app">
       <v-app-bar color="primary" app dark hight="60">
-        <v-toolbar-title>Vuetify</v-toolbar-title>
+        <v-toolbar-title>Brain BookSheld</v-toolbar-title>
         <v-spacer></v-spacer>
         <v-toolbar-items>
           <v-menu offset-y>
