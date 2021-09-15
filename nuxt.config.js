@@ -24,7 +24,11 @@ export default {
   css: [],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: ['@/plugins/composition-api'],
+  plugins: [
+    '@/plugins/composition-api',
+    '@/plugins/dayjs/dayjs',
+    { src: '@/plugins/amplify.js', ssr: false },
+  ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,

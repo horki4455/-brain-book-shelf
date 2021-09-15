@@ -1,19 +1,19 @@
 <template>
   <div>
-    <div>
-      <v-row no-gutters>
-        <v-col cols="10" align="start">
-          {{ label}}
-          <p v-if="required">*</p>
-        </v-col>
-      </v-row>
-    </div>
-    <v-menu ref="menu">
+    <v-menu
+      ref="menu"
+      :close-on-content-click="false"
+      transition="scale-transition"
+      offset-y
+      min-width="auto"
+    >
       <template v-slot:activator="{ on, attrs }">
         <v-text-field
+          class="my-5"
           dense
+          :label="label"
           outlined
-          ;value="value"
+          :value="value"
           v-bind="attrs"
           v-on="on"
           readonly
@@ -23,39 +23,54 @@
       </template>
       <v-date-picker
         no-title
-        :day-format="dayFormat"
+        :day-format="daysFormat"
         :header-date-format="dayFormatHeader"
         locale="ja"
         :value="value"
+        :show-current="false"
         @click:clear="$emit('input', $event)"
-      />
+      >
+        <v-btn text color="primary" @click="menu = false">Cancel</v-btn>
+        <v-btn text color="primary" @click="$refs.menu.save(value)">OK</v-btn>
+      </v-date-picker>
     </v-menu>
-    picker: {{ picker }}
   </div>
 </template>
 
 <script lang="ts">
-// import { ref, defineComponent, reactive } from '@vue/composition-api'
-// export default defineComponent({
-//   name: 'DateInput',
-//   props: {
-//     value: {
-//       type: String,
-//       default: '',
-//     },
-//   },
-//   setup(props) {
-
-// const dayformat =
-// const dayFormatHeader = ()=>{
-//   if(props.value !== ''){
-//     retrun $dayjs(props.value).format('YYYY/M/D(ddd)')
-//   }else{
-//     return $dayjs().format('YYYY/M')
-//   }
-// }
-//     return { daysformat, dayFormatHeader }
-//   },
-// })
-//
+import { ref, defineComponent, reactive } from '@vue/composition-api'
+export default defineComponent({
+  name: 'DateInput',
+  props: {
+    value: {
+      type: String,
+      default: '',
+    },
+    label: {
+      type: String,
+      default: '',
+    },
+    required: {
+      type: Boolean,
+      default: false,
+    },
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
+  },
+  setup(props, context) {
+    const daysFormat = (date: string) => {
+      return new Date(date).getDate()
+    }
+    const dayFormatHeader = () => {
+      if (props.value !== '') {
+        return context.root.$dayjs(props.value).format('YYYY/M/D(ddd)')
+      } else {
+        return context.root.$dayjs().format('YYYY/M')
+      }
+    }
+    return { daysFormat, dayFormatHeader }
+  },
+})
 </script>

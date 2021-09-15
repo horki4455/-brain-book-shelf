@@ -1,41 +1,15 @@
 <template>
   <div>
-    <!-- ダイアログ -->
-    <div class="text-center">
-      <v-dialog v-model="dialog" width="500">
-        <template v-slot:activator="{ on, attrs }">
-          <div class="col-12 clearfix">
-            <v-btn
-              class="float-right"
-              color="red lighten-2"
-              dark
-              v-bind="attrs"
-              v-on="on"
-              rounded
-              width="214"
-            >本データ作成</v-btn>
-          </div>
-        </template>
-
-        <v-card>
-          <v-card-title class="text-h5 grey lighten-2">Privacy Policy</v-card-title>
-
-          <v-card-text>ダイアログ作成データ</v-card-text>
-
-          <v-divider></v-divider>
-
-          <v-card-actions>
-            <v-spacer />
-            <v-btn color="primary" text @click="dialog = false">I accept</v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
+    <div class="d-flex justify-content-end">
+      <!-- 作成ボタン -->
+      <v-btn color="red lighten-2" dark rounded width="214" @click="dialog = true">読書データの作成</v-btn>
     </div>
-    <!-- 作成ボタン -->
+
     <div class="text-muted small my-6 ml-4">
       読んだ本のページ一覧ページです
       <br />作成・編集・一覧の確認を行えます。読み解したい内容を一覧で確認しましょう。
     </div>
+
     <!-- フィルタリング機能 -->
 
     <!-- TODO：バリデーションかける -->
@@ -46,13 +20,21 @@
     <div>
       <v-row>
         <v-col cols="4">
-          <TextInput v-model="search" label="タイトル" />
+          <TextInput v-model="title" label="タイトル" />
         </v-col>
         <v-col cols="4">
-          <TextInput v-model="search" label="読了日" />
+          <DateInput v-model="finDate" label="読了日" />
         </v-col>
         <v-col cols="4">
-          <v-select hide-details v-model="search" label="タグ" outlined dense class="my-5" />
+          <v-select
+            hide-details
+            v-model="tag"
+            :items="tagStatus"
+            label="タグ"
+            outlined
+            dense
+            class="my-5"
+          />
         </v-col>
       </v-row>
     </div>
@@ -68,8 +50,8 @@
       class="elevation-10"
       loading-text="一覧を取得中"
       no-data-text="データがありません"
-      :search="search"
       outlined
+      :search="title"
       @click:row="moveToDetail(item.id)"
     >
       <!-- <template v-slot:[`item.status`]="{item}">
@@ -84,14 +66,20 @@
         </div>
       </template>-->
     </v-data-table>
+    <!-- ダイアログ -->
+    <div>
+      <v-dialog v-model="dialog">
+        <CreateBookSumDialog v-on:clickSubmit="onSubmit" />
+      </v-dialog>
+    </div>
   </div>
 </template>
 <script lang="ts">
-import { ref, defineComponent } from '@vue/composition-api'
+import { ref, defineComponent, reactive, toRefs } from '@vue/composition-api'
 export default defineComponent({
   setup(_, context) {
     const router = context.root.$router
-    // TAGの色変更
+    // TAGの色変更処理
     const filterTagColor = (item: string) => {
       switch (item) {
         case '未読':
@@ -105,6 +93,21 @@ export default defineComponent({
           break
       }
     }
+    const filterTag = (item: string) => {
+      switch (item) {
+        case '未読':
+          return 'green'
+          break
+        case '読了':
+          return 'blue'
+          break
+        case '途中':
+          return 'red'
+          break
+      }
+    }
+    const tagStatus = ['未読', '読了', '途中']
+
     // テーブルに関するデータ
     const header = [
       { text: 'タイトル', value: 'name' },
@@ -155,14 +158,35 @@ export default defineComponent({
         status: '途中',
       },
     ]
-    const search = ref('')
-    const dialog = ref(false)
+    const searchKeys = reactive({
+      title: '',
+      finDate: '',
+      tag: '',
+    })
+    const content = reactive({
+      dialog: false,
+    })
+    const onSubmit = (params: any) => {
+      content.dialog = false
+    }
+
     // 詳細遷移処理
     const moveToDetail = (id: number) => {
       router.push(`books/${id}`)
     }
 
-    return { header, item, search, dialog, moveToDetail, filterTagColor }
+    return {
+      // データ
+      header,
+      item,
+      tagStatus,
+      ...toRefs(content),
+      ...toRefs(searchKeys),
+      // メソッド
+      moveToDetail,
+      filterTagColor,
+      onSubmit,
+    }
   },
 })
 </script>

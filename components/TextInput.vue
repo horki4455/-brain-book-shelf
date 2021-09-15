@@ -22,7 +22,7 @@ export default defineComponent({
   props: {
     value: {
       type: [String, Number],
-      default: false,
+      default: '',
     },
     readonly: {
       type: Boolean,
