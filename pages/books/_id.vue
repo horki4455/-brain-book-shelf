@@ -36,41 +36,38 @@
     <h3 class="border-bottom border-secondary" style="padding:10px">
       <v-icon class="pr-3">mdi-chevron-triple-right</v-icon>情報一覧
     </h3>
-    <v-form>
-      <v-container>
-        <div>
-          <v-row class="mt-2">
-            <v-col cols="4">
-              <TextInput label="タイトル" v-model="tableItems.title" readonly :clearable="false" />
-            </v-col>
-            <v-col cols="4">
-              <TextInput label="ID" v-model="tableItems.id" readonly :clearable="false" />
-            </v-col>
-            <v-col cols="4">
-              <TextInput label="著者" v-model="tableItems.auther" readonly :clearable="false" />
-            </v-col>
-          </v-row>
-          <v-row class="mt-0">
-            <v-col cols="4">
-              <TextInput label="読了日" v-model="tableItems.finishDay" readonly :clearable="false" />
-            </v-col>
-            <v-col cols="4">
-              <TextInput label="ステータス" v-model="tableItems.status" readonly :clearable="false" />
-            </v-col>
-            <v-col cols="4">
-              <TextInput label="ジャンル" v-model="tableItems.kind" readonly :clearable="false" />
-            </v-col>
-          </v-row>
-          <!-- TODO: 複数個登録可能にする -->
-          <div class="my-9">
-            <v-textarea v-model="tableItems.think" outlined readonly label="要約/感想" />
-          </div>
-          <div class="d-flex">
-            <nuxt-link to="/books">一覧へ戻る</nuxt-link>
-          </div>
-        </div>
-      </v-container>
-    </v-form>
+
+    <div>
+      <v-row class="mt-2">
+        <v-col cols="4">
+          <TextInput label="タイトル" v-model="tableItems.title" readonly :clearable="false" />
+        </v-col>
+        <v-col cols="4">
+          <TextInput label="ID" v-model="tableItems.id" readonly :clearable="false" />
+        </v-col>
+        <v-col cols="4">
+          <TextInput label="著者" v-model="tableItems.auther" readonly :clearable="false" />
+        </v-col>
+      </v-row>
+      <v-row class="mt-0">
+        <v-col cols="4">
+          <TextInput label="読了日" v-model="tableItems.finishDay" readonly :clearable="false" />
+        </v-col>
+        <v-col cols="4">
+          <TextInput label="ステータス" v-model="tableItems.status" readonly :clearable="false" />
+        </v-col>
+        <v-col cols="4">
+          <TextInput label="ジャンル" v-model="tableItems.kind" readonly :clearable="false" />
+        </v-col>
+      </v-row>
+      <!-- TODO: 複数個登録可能にする -->
+      <div class="my-9">
+        <v-textarea v-model="tableItems.think" outlined readonly label="要約/感想" />
+      </div>
+      <div class="float-right mb-5">
+        <nuxt-link to="/books">一覧へ戻る</nuxt-link>
+      </div>
+    </div>
   </div>
 </template>
 <script lang="ts">
