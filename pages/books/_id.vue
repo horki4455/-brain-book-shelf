@@ -71,7 +71,7 @@
   </div>
 </template>
 <script lang="ts">
-import { ref } from '@vue/composition-api'
+import { ref } from '@nuxtjs/composition-api'
 export default {
   setup() {
     const tableItems = {

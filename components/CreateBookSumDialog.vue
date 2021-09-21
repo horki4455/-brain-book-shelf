@@ -40,7 +40,7 @@
   </v-card>
 </template>
 <script lang="ts">
-import { ref, defineComponent, toRefs } from '@vue/composition-api'
+import { ref, defineComponent, toRefs } from '@nuxtjs/composition-api'
 export default defineComponent({
   props: {
     title: {

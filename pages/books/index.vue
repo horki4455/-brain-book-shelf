@@ -2,7 +2,14 @@
   <div>
     <div class="d-flex justify-content-end">
       <!-- 作成ボタン -->
-      <v-btn color="red lighten-2" dark rounded width="214" @click="dialog = true">読書データの作成</v-btn>
+      <v-btn
+        color="red lighten-2"
+        dark
+        rounded
+        width="214"
+        @click="dialog = true"
+        >読書データの作成</v-btn
+      >
     </div>
 
     <div class="text-muted small my-6 ml-4">
@@ -13,7 +20,7 @@
     <!-- フィルタリング機能 -->
 
     <!-- TODO：バリデーションかける -->
-    <div class="my-3">
+    <div>
       <v-icon>mdi-chevron-triple-right</v-icon>
       <span class="text-h6 mb-0">検索</span>
     </div>
@@ -39,32 +46,35 @@
       </v-row>
     </div>
 
-    <div class="my-3">
+    <div class="mb-4">
       <v-icon>mdi-chevron-triple-right</v-icon>
       <span class="text-h6">本一覧情報</span>
     </div>
-
+    <!-- itemと、template内のitemは別変数（v-テーブル内の機能） -->
     <v-data-table
-      :items="item"
+      :items="filterItems"
       :headers="header"
       class="elevation-10"
       loading-text="一覧を取得中"
       no-data-text="データがありません"
       outlined
       :search="title"
-      @click:row="moveToDetail(item.id)"
+      @click:row="moveToDetail($event.id)"
     >
-      <!-- <template v-slot:[`item.status`]="{item}">
-        <v-chip small :color="filterTagColor(item.status)">{{item.status}}</v-chip>
+      <!-- any型のデータが渡って（emitされて）きているので、それを受け取る＄event -->
+      <template v-slot:item.status="{ item }">
+        <v-chip small :color="filterTagColor(item.status)">
+          {{ item.status }}
+        </v-chip>
       </template>
 
-      <template v-slot:[`item.edit`]="{ item }">
+      <template v-slot:item.edit>
         <div>
           <v-btn>
             <v-icon color="info">mdi-pencil</v-icon>
           </v-btn>
         </div>
-      </template>-->
+      </template>
     </v-data-table>
     <!-- ダイアログ -->
     <div>
@@ -75,7 +85,13 @@
   </div>
 </template>
 <script lang="ts">
-import { ref, defineComponent, reactive, toRefs } from '@vue/composition-api'
+import {
+  ref,
+  defineComponent,
+  reactive,
+  toRefs,
+  computed,
+} from '@nuxtjs/composition-api'
 export default defineComponent({
   setup(_, context) {
     const router = context.root.$router
@@ -116,6 +132,9 @@ export default defineComponent({
       { text: 'ステータス', value: 'status' },
       { text: '編集', value: 'edit' },
     ]
+    const filterItems = computed(() => {
+      return item.filter((v) => v.status === searchKeys.tag)
+    })
     const item = [
       {
         id: 1,
@@ -178,7 +197,8 @@ export default defineComponent({
     return {
       // データ
       header,
-      item,
+
+      filterItems,
       tagStatus,
       ...toRefs(content),
       ...toRefs(searchKeys),
