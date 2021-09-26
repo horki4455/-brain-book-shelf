@@ -2,15 +2,9 @@
   <div>
     <div class="d-flex justify-content-end">
       <!-- 作成ボタン -->
-      <v-btn
-        color="red lighten-2"
-        dark
-        rounded
-        width="214"
-        @click="dialog = true"
-        >読書データの作成</v-btn
-      >
+      <v-btn color="red lighten-2" dark rounded width="214" @click="dialog = true">読書データの作成</v-btn>
     </div>
+    <div>ななな{{$store.getters.getTodos}}</div>
 
     <div class="text-muted small my-6 ml-4">
       読んだ本のページ一覧ページです
@@ -63,9 +57,7 @@
     >
       <!-- any型のデータが渡って（emitされて）きているので、それを受け取る＄event -->
       <template v-slot:item.status="{ item }">
-        <v-chip small :color="filterTagColor(item.status)">
-          {{ item.status }}
-        </v-chip>
+        <v-chip small :color="filterTagColor(item.status)">{{ item.status }}</v-chip>
       </template>
 
       <template v-slot:item.edit>

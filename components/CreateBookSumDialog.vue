@@ -74,9 +74,10 @@ export default defineComponent({
       emit('clickSubmit', createDefaultInput)
     }
     return {
+      // データ
       submit,
-      //
       ...toRefs(createDefaultInput),
+      // メソッド
     }
   },
 })

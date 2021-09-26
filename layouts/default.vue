@@ -9,7 +9,9 @@
         <v-toolbar-items>
           <v-menu offset-y>
             <template v-slot:activator="{on}">
-              <v-btn class="text-white" v-on="on" text>user name</v-btn>
+              <v-btn class="text-white" v-on="on" text>
+                <changeLoginStatus />
+              </v-btn>
             </template>
             <v-list>
               <v-list-item>
