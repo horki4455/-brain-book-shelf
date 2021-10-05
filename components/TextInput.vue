@@ -6,6 +6,7 @@
       :readonly="readonly"
       :disabled="disabled"
       :clearable="clearable"
+      :rules="rules"
       :label="label"
       outlined
       hide-details
@@ -21,8 +22,12 @@ export default defineComponent({
   name: 'TextInput',
   props: {
     value: {
-      type: [String, Number],
+      type: [String, Boolean],
       default: '',
+    },
+    rules: {
+      type: Array,
+      default: () => [],
     },
     readonly: {
       type: Boolean,

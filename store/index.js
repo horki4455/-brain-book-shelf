@@ -2,12 +2,12 @@ import firebase from '~/plugins/firebase'
 import { auth } from '~/plugins/firebase.js'
 const db = firebase.firestore()
 
-const todoRef = db.collection('todos')
+const bookItemsArrayRef = db.collection('bookItemsArray')
 
 export const state = () => ({
   userUid: '',
   userName: '',
-  todos: [],
+  bookItemsArray: [],
 })
 
 export const mutations = {
@@ -18,10 +18,10 @@ export const mutations = {
     state.userName = userName
   },
   addTodo(state, todo) {
-    state.todos.push(todo)
+    state.bookItemsArray.push(todo)
   },
   clearTodo(state) {
-    state.todos = []
+    state.bookItemsArray = []
   },
 }
 
@@ -39,7 +39,7 @@ export const actions = {
       })
       .then(() => {
         this.$router.push({
-          name: 'chatspace',
+          name: 'books',
         })
       })
       .catch(function (error) {
@@ -50,10 +50,10 @@ export const actions = {
   signOut() {
     return auth.signOut()
   },
-  addTodo({ commit }, todo) {
-    todoRef
+  addTodo(_, todo) {
+    bookItemsArrayRef
       .add({
-        limit: todo.limit,
+        bookItem: todo.bookItem,
       })
       .catch(function (error) {
         console.error('Error adding document: ', error)
@@ -72,7 +72,7 @@ export const getters = {
     return state.userName
   },
   getTodos(state) {
-    return state.todos
+    return state.bookItemsArray
   },
   isSignedIn(state) {
     return state.userUid !== ''

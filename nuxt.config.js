@@ -36,10 +36,14 @@ export default {
     // https://go.nuxtjs.dev/vuetify
     '@nuxtjs/vuetify',
     '@nuxtjs/composition-api/module',
+    '@nuxtjs/axios',
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: ['bootstrap-vue/nuxt'],
+  router: {
+    middleware: 'authenticator',
+  },
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   vuetify: {

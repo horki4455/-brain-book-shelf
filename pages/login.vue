@@ -1,21 +1,51 @@
 <template>
-  <div>
-    <div>
-      <!-- ログイン時 -->
-      <div v-if="userStatus" key="login" class="navbar-item">
-        <p class="navbar-item">{{ user.displayName }}</p>
-        <!-- <div>画像表示場所</div> -->
-        <p>ユーザー: {{ $store.getters.getUserName }}</p>
-        <v-btn type="danger" @click="doLogout">ログアウト</v-btn>
+  <div class="pt-10">
+    <!-- ログイン時 -->
+    <div v-if="userStatus" key="login">
+      <p>{{ user.displayName }}</p>
+
+      <p>ユーザー: {{ $store.getters.getUserName }}</p>
+      <v-btn color="red" @click="doLogout">ログアウト</v-btn>
+    </div>
+    <!-- 未ログイン時 -->
+    <div v-else key="logout">
+      <div class="d-flex justify-content-center">
+        <h3>
+          <p>brain-booksharfe</p>
+        </h3>
       </div>
-      <!-- 未ログイン時 -->
-      <div v-else key="logout">
-        <div class="card__text">ログイン</div>
-        <Signin />
-        <div class="button-wrapper">
-          <span type="button" @click="doLogin">
-            <v-btn size="large" type="danger">googleアカウントでログイン</v-btn>
-          </span>
+      <div>
+        <v-form>
+          <div class="d-flex justify-content-center">
+            <v-col cols="10" class="mb-0">
+              <!-- TODO:形状の変更 -->
+              <TextInput type="email" v-model="mailaddress" label="メールアドレス" />
+            </v-col>
+          </div>
+          <div class="d-flex justify-content-center">
+            <v-col cols="10">
+              <TextInput type="password" v-model="password" label="password" />
+            </v-col>
+          </div>
+
+          <div class="d-flex justify-content-center">
+            <v-btn color="blue lighten-2" dark rounded width="214" @click="login">メールアドレスでログイン</v-btn>
+            <v-btn
+              color="red lighten-2"
+              dark
+              rounded
+              width="214"
+              @click="doLogin"
+              class="ml-3"
+            >googleでログイン</v-btn>
+          </div>
+        </v-form>
+        <div class="my-10">
+          <div class="d-flex justify-content-end">
+            <div>
+              <router-link class="router" to="SignUp">アカウントを作成へ進む</router-link>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -23,12 +53,14 @@
 </template>
 
 <script>
-import {auth, db} from '@/plugins/firebase'
+import {auth, db, firebase} from '@/plugins/firebase'
+
 export default{
   // TODO:compositionAPIに書き換える
   data(){
     return{
-      
+      mailaddress: '',
+      password: ''
     }
   },
   computed: {
@@ -40,6 +72,22 @@ export default{
     }
   },
   methods: {
+    login: function () {
+      firebase.auth().signInWithEmailAndPassword(this.mailaddress, this.password)
+        .then(() => {
+          alert('ログインしました')
+          this.$router.go({path: this.$router.currentRoute.path, force: true})
+          this.$router.push({
+            name: 'chatspace'
+          })
+        })
+        .catch((err) => {
+          alert(err.message)
+        })
+        .catch((err) => {
+          alert(err.message)
+        })
+    },
     doLogin() {
       this.$store.dispatch('login')
         .catch((err) => {
