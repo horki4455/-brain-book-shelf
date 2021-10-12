@@ -6,28 +6,9 @@
           <h3 class="text-white">Brain BookSheld</h3>
         </v-toolbar-title>
         <v-spacer />
-        <v-toolbar-items>
-          <v-menu offset-y>
-            <template v-slot:activator="{on}">
-              <v-btn class="text-white" v-on="on" text>
-                <changeLoginStatus />
-              </v-btn>
-            </template>
-            <v-list>
-              <v-list-item>
-                <v-list-item-content>
-                  <v-list-item-title>ログアウト</v-list-item-title>
-                </v-list-item-content>
-              </v-list-item>
-              <v-list-item>
-                <v-list-item-content>
-                  <v-list-item-title>マイページ</v-list-item-title>
-                </v-list-item-content>
-              </v-list-item>
-            </v-list>
-          </v-menu>
-        </v-toolbar-items>
+        <changeLoginStatus />
       </v-app-bar>
+      <!-- TODO:時間あるとき実装 -->
       <!-- <v-breadcrumbs :items="items" divider="=>" large exact: true/> -->
       <v-main>
         <v-container>

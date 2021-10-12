@@ -2,14 +2,20 @@
   <div>
     <div class="d-flex justify-content-end">
       <!-- 作成ボタン -->
-      <v-btn color="red lighten-2" dark rounded width="214" @click="ToggleDialog = true">読書データの作成</v-btn>
+      <v-btn
+        color="red lighten-2"
+        dark
+        rounded
+        width="214"
+        @click="ToggleDialog = true"
+        >読書データの作成</v-btn
+      >
     </div>
     <div class="text-muted small my-6 ml-4">
       読んだ本のページ一覧ページです
       <br />作成・編集・一覧の確認を行えます。読み解したい内容を一覧で確認しましょう。
     </div>
 
-    <!-- TODO：バリデーションかける -->
     <div>
       <v-icon>mdi-chevron-triple-right</v-icon>
       <span class="text-h6 mb-0">検索</span>
@@ -19,19 +25,10 @@
         <v-col cols="4">
           <TextInput v-model="title" label="タイトル" />
         </v-col>
+
+        <!-- TODO:clearableが実行されていない -->
         <v-col cols="4">
-          <DateInput v-model="price" label="価格" />
-        </v-col>
-        <v-col cols="4">
-          <v-select
-            hide-details
-            v-model="tag"
-            :items="tagStatus"
-            label="タグ"
-            outlined
-            dense
-            class="my-5"
-          />
+          <SelectInput label="タグ" v-model="tag" clearable />
         </v-col>
       </v-row>
     </div>
@@ -42,7 +39,7 @@
     </div>
     <!-- itemと、template内のitemは別変数（v-テーブル内の機能） -->
     <v-data-table
-      :items="filteredItems"
+      :items="filteredTag"
       :headers="header"
       class="elevation-10"
       loading-text="一覧を取得中"
@@ -52,11 +49,13 @@
       @click:row="moveToDetail($event.id)"
     >
       <!-- 上のやつの説明：any型のデータが渡って（emitされて）きているので、それを受け取る＄event -->
-      <template v-slot:item.status="{ item }">
-        <v-chip small :color="filterTagColor(item.status)">{{ item.status }}</v-chip>
+      <template v-slot:item.bookItem.status="{ item }">
+        <v-chip small dark :color="filterTagColor(item.bookItem.status)">{{
+          item.bookItem.status
+        }}</v-chip>
       </template>
 
-      <template v-slot:item.edit>
+      <template v-slot:item.bookItem.edit>
         <div>
           <v-btn>
             <v-icon color="info">mdi-pencil</v-icon>
@@ -67,7 +66,7 @@
     <!-- ダイアログ -->
     <div>
       <v-dialog v-model="ToggleDialog">
-        <CreateBookSumDialog v-on:close="closeDialog" />
+        <CreateBookSumDialog @close="closeDialog" />
       </v-dialog>
     </div>
   </div>
@@ -84,7 +83,6 @@ import {
   useRouter,
 } from '@nuxtjs/composition-api'
 import { db } from '@/plugins/firebase'
-// import axios from 'axios'
 
 export default defineComponent({
   setup(_) {
@@ -106,31 +104,26 @@ export default defineComponent({
       }
     }
 
-    const tagStatus = ['未読', '読了', '途中']
-
     // テーブルに関するデータ
     const header = [
       { text: 'タイトル', value: 'bookItem.title' },
-      { text: '著者', value: 'bookItem.auther' },
-      { text: 'ジャンル', value: 'bookItem.kind' },
+      { text: '著者', value: 'bookItem.author' },
+      { text: 'ジャンル', value: 'bookItem.published' },
       { text: 'タグ', value: 'bookItem.status' },
-      { text: '編集', value: 'edit' },
+      { text: '編集', value: 'bookItem.edit' },
     ]
-    // firebaseが落ち着いたら実装
-    const filteredItems = computed(() => {
-      const unrefItem = store.getters.getTodos.map((v: any) => {
-        return v.bookItem
-      })
+    const searchKeys = reactive({
+      title: '',
+      tag: '',
+    })
+    const filteredTag = computed(() => {
       if (searchKeys.tag === '') {
         return store.getters.getTodos
       } else {
-        return unrefItem.filter((v: any) => v.status === searchKeys.tag)
+        return store.getters.getTodos.filter(
+          (v: any) => v.bookItem.status === searchKeys.tag
+        )
       }
-    })
-    const searchKeys = reactive({
-      title: '',
-      price: '',
-      tag: '',
     })
     const ToggleDialog = ref(false)
     const closeDialog = () => {
@@ -139,6 +132,7 @@ export default defineComponent({
 
     // 詳細遷移処理
     const moveToDetail = (id: number) => {
+      console.log(id)
       router.push(`books/${id}`)
     }
     useFetch(async () => {
@@ -160,13 +154,12 @@ export default defineComponent({
     return {
       // データ
       header,
-      tagStatus,
       ToggleDialog,
       ...toRefs(searchKeys),
       // メソッド
       moveToDetail,
       filterTagColor,
-      filteredItems,
+      filteredTag,
       closeDialog,
     }
   },

@@ -43,7 +43,7 @@
         <div class="my-10">
           <div class="d-flex justify-content-end">
             <div>
-              <router-link class="router" to="SignUp">アカウントを作成へ進む</router-link>
+              <router-link class="router" to="signup">アカウントを作成へ進む</router-link>
             </div>
           </div>
         </div>

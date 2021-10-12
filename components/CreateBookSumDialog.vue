@@ -9,31 +9,35 @@
           <div>
             <v-row class="mt-2">
               <v-col cols="4">
-                <TextInput label="タイトル" v-model="title" :clearable="false" />
+                <TextInput
+                  label="タイトル"
+                  v-model="title"
+                  :rules="[required]"
+                />
               </v-col>
-              <!-- <v-text-field
-              v-model="title"
-              label="入力必須で文字数制限のあるテキストフィールド"
-              :rules="[required, limit_length]"
-              counter="10"
-              />-->
+
               <v-col cols="4">
-                <TextInput label="ID" v-model="id" :clearable="false" />
+                <TextInput label="ID" v-model="id" />
               </v-col>
               <v-col cols="4">
-                <!-- TODO:これで保存エラー起こる -->
-                <TextInput label="著者" v-model="auther" :clearable="false" />
+                <!-- TODO：再検索機能 -->
+                <TextInput label="著者" v-model="author" />
               </v-col>
             </v-row>
             <v-row class="mt-0">
               <v-col cols="4">
-                <TextInput label="価格" v-model="price" :clearable="false" />
+                <TextInput label="価格" v-model="price" />
               </v-col>
               <v-col cols="4">
-                <TextInput label="タグ" v-model="status" :clearable="false" />
+                <SelectInput label="タグ" v-model="status" />
               </v-col>
               <v-col cols="4">
-                <TextInput label="発行日" v-model="published" :clearable="false" />
+                <TextInput
+                  label="発行日"
+                  v-model="published"
+                  :rules="[limit_length]"
+                  :counter="10"
+                />
               </v-col>
             </v-row>
             <!-- TODO: 複数個登録可能にする -->
@@ -44,30 +48,57 @@
         </v-form>
       </v-card-text>
       <v-card-actions class="d-flex justify-content-center">
-        <v-btn color="red" width="214" dark rounded @click="$emit('close')">cancel</v-btn>
-        <v-btn color="blue" width="214" dark rounded :disabled="!isValid" @click="addTodo">OK</v-btn>
+        <v-btn color="red" width="214" dark rounded @click="$emit('close')"
+          >cancel</v-btn
+        >
+        <v-btn
+          color="blue"
+          width="214"
+          rounded
+          :disabled="!isValid"
+          @click="addTodo"
+          >OK</v-btn
+        >
         <v-btn
           color="green lighten-2"
           dark
           rounded
           width="214"
           @click="GBAToggleDialog = true"
-        >本のデータの検索</v-btn>
+          >本のデータの検索</v-btn
+        >
       </v-card-actions>
     </v-card>
     <v-dialog v-model="GBAToggleDialog">
       <v-card class="pa-5">
         <div>
-          <p class="my-5">検索した本をクリックしてください</p>
+          <p class="my-5">本を検索し、クリックしてください</p>
           <TextInput v-model="keyword" label="本を検索" />
-          <div class="d-flex justify-content-end">
-            <v-btn @click="getResult">検索</v-btn>
-            <v-btn @click="GBAToggleDialog = false">閉じる</v-btn>
-          </div>
+          <v-card-actions class="d-flex justify-content-center">
+            <v-btn
+              color="red"
+              width="214"
+              rounded
+              @click="GBAToggleDialog = false"
+              >閉じる</v-btn
+            >
+            <!-- TODO: ボタンコンポーネントも作らないとな -->
+            <v-btn color="green" width="214" rounded @click="getResult"
+              >検索</v-btn
+            >
+          </v-card-actions>
         </div>
         <div>
-          <div v-for="(book, i) of serchedBookDate" :index="i + 1" :key="book.isbn">
-            <div class="clearfix" :class="{ linkable }" @click="getBookDate(book)">
+          <div
+            v-for="(book, i) of serchedBookDate"
+            :index="i + 1"
+            :key="book.isbn"
+          >
+            <div
+              class="clearfix"
+              :class="{ linkable }"
+              @click="getBookDate(book)"
+            >
               <div class="image">
                 <img :src="book.image" />
               </div>
@@ -107,17 +138,30 @@ export default defineComponent({
   setup(props, { emit }) {
     const required = (value: string) => !!value || '必ず入力してください'
     const limit_length = (value: string) =>
-      value.length <= 10 || '10文字以内で入力してください'
+      value.length <= 30 || '30文字以内で入力してください'
 
     const bookInput = reactive({
       id: '',
       title: '',
       think: '',
-      auther: '',
+      author: '',
       price: '',
       status: '未読',
       published: '',
     })
+    const defaultbookInput = reactive({
+      id: '',
+      title: '',
+      think: '',
+      author: '',
+      price: '',
+      status: '未読',
+      published: '',
+    })
+    // TODO:実装されてない
+    const initDialog = () => {
+      Object.assign(bookInput, defaultbookInput)
+    }
     const isValid = ref(false)
     const store = useStore()
     const addTodo = () => {
@@ -130,7 +174,7 @@ export default defineComponent({
       const selectedBook = reactive({
         id: book.id,
         title: book.title,
-        auther: book.auther,
+        author: book.author,
         price: book.price,
         published: book.published,
       })
@@ -141,8 +185,9 @@ export default defineComponent({
     let serchedBookDate = ref([])
     const getResult = () => {
       axios
-        .get('https://www.googleapis.com/books/v1/volumes?q=search' + keyword)
+        .get('https://www.googleapis.com/books/v1/volumes?q=' + keyword)
         .then((response: any) => {
+          console.log('キーワード', keyword)
           serchedBookDate.value = []
           for (let b of response.data.items) {
             let authors = b.volumeInfo.authors
@@ -184,6 +229,9 @@ export default defineComponent({
 })
 </script>
 <style scoped>
+.theme--light.v-btn {
+  color: #f8f9fa;
+}
 .linkable:hover {
   cursor: pointer;
   background-color: #ff9;

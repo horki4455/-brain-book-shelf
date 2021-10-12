@@ -1,50 +1,71 @@
 <template>
-  <v-card>
-    <v-card-title class="d-flex justify-content-center">
-      <span>読書データの編集</span>
-      <div v-if="FetchedbookItem">{{FetchedbookItem.bookItem.finishDay}}</div>
-      <!-- ロード中の処理は何かすべき
-    v-ifは存在している場合のみ出すので、この形で書いてるAPIとの通信する際はこの描き方する。
-      null.bookItem.finishDayみたいな描き方になってしまっていた。-->
-
-      <spacer />
-    </v-card-title>
-    <v-card-text>
-      <div>
-        <v-row class="mt-2">
-          <v-col cols="4">
-            <TextInput label="タイトル" v-model="title" :clearable="false" />
-          </v-col>
-          <v-col cols="4">
-            <TextInput label="ID" v-model="id" :clearable="false" />
-          </v-col>
-          <v-col cols="4">
-            <TextInput label="著者" v-model="auther" :clearable="false" />
-          </v-col>
-        </v-row>
-        <v-row class="mt-0">
-          <v-col cols="4">
-            <TextInput label="価格" v-model="finishDay" :clearable="false" />
-          </v-col>
-          <v-col cols="4">
-            <TextInput label="ステータス" v-model="status" :clearable="false" />
-          </v-col>
-          <v-col cols="4">
-            <TextInput label="ジャンル" v-model="kind" :clearable="false" />
-          </v-col>
-        </v-row>
-        <!-- TODO: 複数個登録可能にする -->
-        <div class="my-9">
-          <v-textarea v-model="think" outlined label="要約/感想" />
+  <div>
+    <v-card>
+      <v-card-title class="d-flex justify-content-center">
+        <span>読書データの編集</span>
+        <!-- TODO:ロード中の処理は何かすべき -->
+        <spacer />
+      </v-card-title>
+      <v-card-text>
+        <div>
+          <!-- TODO: dateInputとうまくかみ合っていない -->
+          <v-row class="mt-2">
+            <v-col cols="4">
+              <TextInput label="タイトル" v-model="title" />
+            </v-col>
+            <v-col cols="4">
+              <TextInput label="ID" v-model="id" />
+            </v-col>
+            <v-col cols="4">
+              <TextInput label="著者" v-model="author" />
+            </v-col>
+          </v-row>
+          <v-row class="mt-0">
+            <v-col cols="4">
+              <TextInput label="発行日" v-model="published" />
+            </v-col>
+            <v-col cols="4">
+              <DateInput label="価格" v-model="price" />
+            </v-col>
+            <v-col cols="4">
+              <SelectInput label="タグ" v-model="status" />
+            </v-col>
+            <v-col cols="4">
+              <DateInput label="読了日" v-model="finishDay" />
+            </v-col>
+          </v-row>
+          <!-- TODO: 複数個登録可能にする -->
+          <div class="my-9">
+            <v-textarea v-model="think" outlined label="要約/感想" />
+          </div>
         </div>
+      </v-card-text>
+      <!-- TODO: ボタンの固定 -->
+      <div class="d-flex justify-content-center">
+        <v-btn
+          class="mr-5"
+          color="blue"
+          width="214"
+          dark
+          rounded
+          @click="$emit('close')"
+          >cancel</v-btn
+        >
+        <v-btn
+          class="mr-5"
+          color="green"
+          width="214"
+          dark
+          rounded
+          @click="editTodo()"
+          >OK</v-btn
+        >
+        <v-btn color="red" width="214" dark rounded @click="deleteTodo()"
+          >delete</v-btn
+        >
       </div>
-    </v-card-text>
-    <v-card-actions>
-      <v-spacer />
-      <v-btn text color="success">OK</v-btn>
-      <v-btn color="danger" @click="deleteTodo()">削除</v-btn>
-    </v-card-actions>
-  </v-card>
+    </v-card>
+  </div>
 </template>
 <script lang="ts">
 import {
@@ -58,6 +79,7 @@ import {
   useRouter,
 } from '@nuxtjs/composition-api'
 import { db } from '@/plugins/firebase'
+import dayjs from 'dayjs'
 
 export default defineComponent({
   props: {
@@ -65,31 +87,51 @@ export default defineComponent({
       type: String,
       default: '',
     },
+    tableItems: {
+      type: Object,
+      default: '',
+    },
   },
   setup(props, { emit }) {
     const router = useRouter()
-    const createDefaultInput = () =>
-      reactive({
-        title: '',
-        think: '',
-        finishDay: '',
-        status: '',
-        kind: '',
-      })
-    const store = useStore()
+    const now = dayjs().format('YYYY-MM-DD')
 
+    const getTableItems = reactive({
+      id: props.tableItems.id ? props.tableItems.id : ' -',
+      author: props.tableItems.author ? props.tableItems.author : '-',
+      title: props.tableItems.title,
+      think: props.tableItems.think,
+      finishDay: props.tableItems.finishDay ? props.tableItems.finishDay : now,
+      price: props.tableItems.price ? props.tableItems.price : '-',
+      status: props.tableItems.status,
+      published: props.tableItems.published ? props.tableItems.published : '-',
+    })
+    const defaultTableItems = reactive({
+      id: '',
+      author: '',
+      title: '',
+      think: '',
+      finishDay: '',
+      price: '',
+      status: '',
+      published: '',
+    })
+
+    const store = useStore()
     const deleteTodo = () => {
       db.collection('bookItemsArray').doc(props.pageId).delete()
       // TODO: 一回削除確認ダイアログ挟む
       router.push('/books')
     }
     const editTodo = () => {
-      db.collection('bookItemsArray').doc(props.pageId).update({
-        bookItem: bookInput,
-      })
-      // this.selectedId = ''
+      console.log('props.pageId')
+      db.collection('bookItemsArray')
+        .doc(props.pageId)
+        .update({ bookItem: defaultTableItems })
+      console.log(defaultTableItems)
+      emit('close')
     }
-    // useFecthのメリット行かせてなくね。moutedでよくね。
+    // useFecthのメリット行かせていない。moutedで良いかも。
     useFetch(async () => {
       try {
         db.collection('bookItemsArray').onSnapshot((snapshot) => {
@@ -99,31 +141,19 @@ export default defineComponent({
             let id = { id: doc.id }
             const content = { ...data, ...id }
             store.commit('addTodo', content)
+            Object.assign(defaultTableItems, getTableItems)
           })
         })
       } catch (e) {
         console.error(e)
       }
     })
-    let FetchedbookItem = ref(null)
-    const fetchBook = async () => {
-      const docRef = db.collection('bookItemsArray').doc(props.pageId)
-      FetchedbookItem.value = await docRef.get().then((doc) => doc.data())
-    }
-    fetchBook() //結局createdと同じタイミング
-    const bookInput = reactive({
-      id: '',
-      title: '',
-      think: '',
-      auther: '',
-      finishDay: '',
-      status: '',
-      kind: '',
-    })
+
     return {
       // データ
-      ...toRefs(bookInput),
-      FetchedbookItem,
+      getTableItems,
+      now,
+      ...toRefs(defaultTableItems),
       // メソッド
       deleteTodo,
       editTodo,
