@@ -17,10 +17,10 @@ export const mutations = {
   setUserName(state, userName) {
     state.userName = userName
   },
-  addTodo(state, todo) {
+  addBookData(state, todo) {
     state.bookItemsArray.push(todo)
   },
-  clearTodo(state) {
+  clearBookData(state) {
     state.bookItemsArray = []
   },
 }
@@ -50,7 +50,7 @@ export const actions = {
   signOut() {
     return auth.signOut()
   },
-  addTodo(_, todo) {
+  addBookData(_, todo) {
     bookItemsArrayRef
       .add({
         bookItem: todo.bookItem,
@@ -71,7 +71,7 @@ export const getters = {
   getUserName(state) {
     return state.userName
   },
-  getTodos(state) {
+  getBookItems(state) {
     return state.bookItemsArray
   },
   isSignedIn(state) {

@@ -56,7 +56,7 @@
           width="214"
           rounded
           :disabled="!isValid"
-          @click="addTodo"
+          @click="addBookData"
           >OK</v-btn
         >
         <v-btn
@@ -164,9 +164,9 @@ export default defineComponent({
     }
     const isValid = ref(false)
     const store = useStore()
-    const addTodo = () => {
+    const addBookData = () => {
       const bookItem = bookInput
-      store.dispatch('addTodo', { bookItem })
+      store.dispatch('addBookData', { bookItem })
       emit('close')
     }
     let selectedBook = ref('')
@@ -214,7 +214,7 @@ export default defineComponent({
       ...toRefs(bookInput),
       keyword,
       // メソッド
-      addTodo,
+      addBookData,
       required,
       limit_length,
       isValid,

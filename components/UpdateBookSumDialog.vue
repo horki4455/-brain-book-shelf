@@ -57,10 +57,10 @@
           width="214"
           dark
           rounded
-          @click="editTodo()"
+          @click="editBookData()"
           >OK</v-btn
         >
-        <v-btn color="red" width="214" dark rounded @click="deleteTodo()"
+        <v-btn color="red" width="214" dark rounded @click="deleteBookData()"
           >delete</v-btn
         >
       </div>
@@ -118,12 +118,12 @@ export default defineComponent({
     })
 
     const store = useStore()
-    const deleteTodo = () => {
+    const deleteBookData = () => {
       db.collection('bookItemsArray').doc(props.pageId).delete()
       // TODO: 一回削除確認ダイアログ挟む
       router.push('/books')
     }
-    const editTodo = () => {
+    const editBookData = () => {
       console.log('props.pageId')
       db.collection('bookItemsArray')
         .doc(props.pageId)
@@ -135,12 +135,12 @@ export default defineComponent({
     useFetch(async () => {
       try {
         db.collection('bookItemsArray').onSnapshot((snapshot) => {
-          store.commit('clearTodo')
+          store.commit('clearBookData')
           snapshot.forEach((doc) => {
             let data = doc.data()
             let id = { id: doc.id }
             const content = { ...data, ...id }
-            store.commit('addTodo', content)
+            store.commit('addBookData', content)
             Object.assign(defaultTableItems, getTableItems)
           })
         })
@@ -155,8 +155,8 @@ export default defineComponent({
       now,
       ...toRefs(defaultTableItems),
       // メソッド
-      deleteTodo,
-      editTodo,
+      deleteBookData,
+      editBookData,
     }
   },
 })

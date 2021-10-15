@@ -118,9 +118,9 @@ export default defineComponent({
     })
     const filteredTag = computed(() => {
       if (searchKeys.tag === '') {
-        return store.getters.getTodos
+        return store.getters.getBookItems
       } else {
-        return store.getters.getTodos.filter(
+        return store.getters.getBookItems.filter(
           (v: any) => v.bookItem.status === searchKeys.tag
         )
       }
@@ -138,12 +138,12 @@ export default defineComponent({
     useFetch(async () => {
       try {
         db.collection('bookItemsArray').onSnapshot((snapshot) => {
-          store.commit('clearTodo')
+          store.commit('clearBookData')
           snapshot.forEach((doc) => {
             let data = doc.data()
             let id = { id: doc.id }
             const content = { ...data, ...id }
-            store.commit('addTodo', content)
+            store.commit('addBookData', content)
           })
         })
       } catch (e) {
