@@ -19,7 +19,7 @@
         :tableItems="tableItems"
       />
     </v-dialog>
-
+    {{ isValid }}
     <!-- TODO: i18n化してコンポーネントに切り分け-->
     <div class="text-muted small my-6 ml-4">
       読んだ本のページ詳細ページです
@@ -42,6 +42,9 @@
         </v-col>
         <v-col cols="4">
           <TextInput label="ID" v-model="id" readonly :clearable="false" />
+        </v-col>
+        <v-col cols="4">
+          <TextInput label="ID" v-model="userId" readonly :clearable="false" />
         </v-col>
         <v-col cols="4">
           <TextInput
@@ -98,7 +101,7 @@ import {
   computed,
   toRefs,
   reactive,
-  useFetch,
+  useStore,
 } from '@nuxtjs/composition-api'
 import { db } from '@/plugins/firebase'
 export default {
@@ -112,8 +115,10 @@ export default {
       published: '',
       status: '',
       think: '',
+      userId: '',
     })
     const route = useRoute()
+    const store = useStore()
     const pageId = route.value.params.id
     let FetchedbookItem = ref(null)
 
@@ -128,8 +133,16 @@ export default {
       tableItems.published = FetchedbookItem.value.bookItem.published
       tableItems.status = FetchedbookItem.value.bookItem.status
       tableItems.think = FetchedbookItem.value.bookItem.think
+      tableItems.userId = FetchedbookItem.value.bookItem.userId
     }
-    fetchBook() //結局createdと同じタイミング
+    fetchBook() //結局createdと同じタイミングのよう
+    const isValid = computed(() => {
+      if (store.getters.getUserUid === tableItems.userId) {
+        return true
+      } else {
+        return false
+      }
+    })
 
     const ToggleDialog = ref(false)
     const closeDialog = () => {
@@ -140,6 +153,7 @@ export default {
       tableItems,
       ToggleDialog,
       closeDialog,
+      isValid,
     }
   },
 }

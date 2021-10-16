@@ -86,7 +86,6 @@ import { db } from '@/plugins/firebase'
 
 export default defineComponent({
   setup(_) {
-    middleware: 'authenticator'
     const router = useRouter()
     const store = useStore()
     // TAGの色変更処理

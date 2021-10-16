@@ -1,6 +1,8 @@
 <template>
   <div>
-    <div class="d-flex justify-center font">{{ message }}</div>
+    <div class="d-flex justify-center font">
+      <v-icon class="mr-2">mdi-chevron-triple-right</v-icon>{{ message }}
+    </div>
     <div class="line" />
   </div>
 </template>

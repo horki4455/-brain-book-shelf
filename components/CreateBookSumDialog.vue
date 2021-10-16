@@ -136,6 +136,7 @@ export default defineComponent({
     book: { type: Object },
   },
   setup(props, { emit }) {
+    const store = useStore()
     const required = (value: string) => !!value || '必ず入力してください'
     const limit_length = (value: string) =>
       value.length <= 30 || '30文字以内で入力してください'
@@ -148,6 +149,7 @@ export default defineComponent({
       price: '',
       status: '未読',
       published: '',
+      userId: store.getters.getUserUid,
     })
     const defaultbookInput = reactive({
       id: '',
@@ -163,7 +165,6 @@ export default defineComponent({
       Object.assign(bookInput, defaultbookInput)
     }
     const isValid = ref(false)
-    const store = useStore()
     const addBookData = () => {
       const bookItem = bookInput
       store.dispatch('addBookData', { bookItem })

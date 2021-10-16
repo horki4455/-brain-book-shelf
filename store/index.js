@@ -17,8 +17,8 @@ export const mutations = {
   setUserName(state, userName) {
     state.userName = userName
   },
-  addBookData(state, todo) {
-    state.bookItemsArray.push(todo)
+  addBookData(state, Item) {
+    state.bookItemsArray.push(Item)
   },
   clearBookData(state) {
     state.bookItemsArray = []
@@ -50,10 +50,10 @@ export const actions = {
   signOut() {
     return auth.signOut()
   },
-  addBookData(_, todo) {
+  addBookData(_, Item) {
     bookItemsArrayRef
       .add({
-        bookItem: todo.bookItem,
+        bookItem: Item.bookItem,
       })
       .catch(function (error) {
         console.error('Error adding document: ', error)

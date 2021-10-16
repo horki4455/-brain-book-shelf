@@ -94,6 +94,7 @@ export default defineComponent({
   },
   setup(props, { emit }) {
     const router = useRouter()
+    const store = useStore()
     const now = dayjs().format('YYYY-MM-DD')
 
     const getTableItems = reactive({
@@ -117,7 +118,6 @@ export default defineComponent({
       published: '',
     })
 
-    const store = useStore()
     const deleteBookData = () => {
       db.collection('bookItemsArray').doc(props.pageId).delete()
       // TODO: 一回削除確認ダイアログ挟む
