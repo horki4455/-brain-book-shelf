@@ -8,7 +8,7 @@
       <div class="d-flex justify-content-center">
         <v-col cols="10" class="mb-0">
           <!-- TODO:作成・ログインが機能していないので修正 -->
-          <TextInput type="email" v-model="mailaddress" label="メールアドレス" />
+          <TextInput v-model="mailaddress" label="メールアドレス" />
         </v-col>
       </div>
       <div class="d-flex justify-content-center">
@@ -19,72 +19,62 @@
     </v-form>
 
     <div class="d-flex justify-content-center">
-      <v-btn color="red lighten-2" dark rounded width="214" @click="signUp">登録</v-btn>
+      <v-btn color="red lighten-2" dark rounded width="214" @click="signUp"
+        >登録</v-btn
+      >
     </div>
     <div class="d-flex justify-content-end mt-5">
       <router-link class="router" to="login">ログイン画面へ戻る</router-link>
     </div>
   </div>
 </template>
-<script>
+<script lang="ts">
+import {
+  computed,
+  defineComponent,
+  reactive,
+  useStore,
+  useRouter,
+  toRefs,
+} from '@nuxtjs/composition-api'
+import { auth } from '@/plugins/firebase'
 
-import {auth, db,firebase} from '@/plugins/firebase'
-export default{
-  data(){
-    return{
-      newTodo: '',
-			newLimit: '',
-			koreageru: 'hoge',
-      doorStatus: true,
-      name: 'authentication',
+export default defineComponent({
+  setup() {
+    const store = useStore()
+    const router = useRouter()
+
+    const datas = reactive({
       password: '',
-      mailaddress: ''
-			
-    }
-  },
-  computed: {
-    user() {
-      return this.$store.getters.user;
-    },
-    userStatus() {
-      return this.$store.getters.isSignedIn;
-    }
-  },
-  methods: {
-    doLogin() {
-      this.$store.dispatch('login').then(() => {
-          alert('ログイン成功！')
-          this.$router.go({path: this.$router.currentRoute.path, force: true})
-        })
-        .catch((err) => {
-          alert(err.message)
-        })
-    },
-    signUp: function () {
-      firebase.auth().createUserWithEmailAndPassword(this.mailaddress, this.password)
+      mailaddress: '',
+    })
+    const user = computed(() => {
+      return store.getters.user
+    })
+    const userStatus = computed(() => {
+      return store.getters.isSignedIn
+    })
+    const signUp = () => {
+      auth
+        .createUserWithEmailAndPassword(datas.mailaddress, datas.password)
         .then(() => {
           alert('ユーザーが作成されました！')
-          this.$router.push({
-            name: 'login'
+          router.push({
+            name: 'login',
           })
         })
-        .catch((err) => {
+        .catch((err: any) => {
           alert('ユーザーが作成されませんでした')
           console.log(err.message)
         })
-    },
-    // ログアウト処理
-    doLogout: function(err) {
-      this.$store
-        .dispatch('signOut')
-        .then(() => {
-          alert('ログアウトしました')
-          this.$router.go({path: this.$router.currentRoute.path, force: true})
-        })
-        .catch((err) => {
-          alert(err.message)
-        })
     }
-  }
-};
+
+    return {
+      ...toRefs(datas),
+      user,
+      userStatus,
+      signUp,
+    }
+  },
+})
 </script>

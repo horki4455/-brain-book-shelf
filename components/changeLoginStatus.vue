@@ -13,7 +13,7 @@
           <v-list-item>
             <v-list-item-content>
               <v-list-item-title>
-                <div @click="doLogout">ログアウト</div>
+                <div @click="doLogout()">ログアウト</div>
               </v-list-item-title>
             </v-list-item-content>
           </v-list-item>
@@ -30,29 +30,34 @@
   </div>
 </template>
 <script>
-export default {
-  computed: {
-    user() {
-      return this.$store.getters.user
-    },
-    userStatus() {
+import { defineComponent, useStore, useRouter } from '@nuxtjs/composition-api'
+
+export default defineComponent({
+  setup() {
+    const store = useStore()
+    const router = useRouter()
+    const user = () => {
+      return store.getters.user
+    }
+    const userStatus = () => {
       // ログインするとtrue
-      return this.$store.getters.isSignedIn
-    },
-  },
-  methods: {
-    doLogout: function (err) {
-      this.$store
+      return store.getters.isSignedIn
+    }
+    const doLogout = () => {
+      store
         .dispatch('signOut')
         .then(() => {
-          alert('ログアウトしました')
-          // TODO: ここの処理おかしい
-          this.$router.go({ path: this.$router.currentRoute.path, force: true })
+          router.go({ name: '/login' })
         })
         .catch((err) => {
           alert(err.message)
         })
-    },
+    }
+    return {
+      userStatus,
+      user,
+      doLogout,
+    }
   },
-}
+})
 </script>

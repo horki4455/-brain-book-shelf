@@ -12,7 +12,7 @@ export default async function ({ store }) {
     store.commit('setUserName', user.displayName)
   }
 }
-// SPAだとまあいけるが、SSRだと遅いらしいので結局クッキーのがいいかも。
+// SPAだとまあいけるが、SSRは遅いので結局クッキーのがいいかも。
 //初期表示時に渡されるものが引数storeへ格納
 //onAuthStateChangedは非同期なのでミドルウェアに弾かれた後に復元処理が走っている
 //promisを返すものしかawaitを使えないため、今回はasyncとawaitが使えなかった。

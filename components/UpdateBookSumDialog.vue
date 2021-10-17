@@ -11,7 +11,11 @@
           <!-- TODO: dateInputとうまくかみ合っていない -->
           <v-row class="mt-2">
             <v-col cols="4">
-              <TextInput label="タイトル" v-model="title" />
+              <TextInput
+                label="タイトル(必須)"
+                :rules="[required]"
+                v-model="title"
+              />
             </v-col>
             <v-col cols="4">
               <TextInput label="ID" v-model="id" />
@@ -75,7 +79,6 @@ import {
   reactive,
   useFetch,
   useStore,
-  computed,
   useRouter,
 } from '@nuxtjs/composition-api'
 import { db } from '@/plugins/firebase'
@@ -96,6 +99,9 @@ export default defineComponent({
     const router = useRouter()
     const store = useStore()
     const now = dayjs().format('YYYY-MM-DD')
+    const required = (value: string) => !!value || '必ず入力してください'
+    const limit_length = (value: string) =>
+      value.length <= 30 || '30文字以内で入力してください'
 
     const getTableItems = reactive({
       id: props.tableItems.id ? props.tableItems.id : ' -',
@@ -123,6 +129,7 @@ export default defineComponent({
       // TODO: 一回削除確認ダイアログ挟む
       router.push('/books')
     }
+    // TODO: 例外処理敷く
     const editBookData = () => {
       console.log('props.pageId')
       db.collection('bookItemsArray')
@@ -157,6 +164,7 @@ export default defineComponent({
       // メソッド
       deleteBookData,
       editBookData,
+      required,
     }
   },
 })

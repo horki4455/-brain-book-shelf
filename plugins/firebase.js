@@ -12,7 +12,6 @@ if (!firebase.apps.length) {
     appId: '1:970100568710:web:7b54ed2054b43c697f5707',
   })
 }
-export const init = firebase.auth()
 
 export const auth = firebase.auth()
 export const db = firebase.firestore()

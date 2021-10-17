@@ -5,6 +5,7 @@
         color="red lighten-2"
         dark
         rounded
+        :disabled="!isValid"
         width="214"
         @click="ToggleDialog = true"
         >編集</v-btn
@@ -19,7 +20,6 @@
         :tableItems="tableItems"
       />
     </v-dialog>
-    {{ isValid }}
     <!-- TODO: i18n化してコンポーネントに切り分け-->
     <div class="text-muted small my-6 ml-4">
       読んだ本のページ詳細ページです
@@ -42,9 +42,6 @@
         </v-col>
         <v-col cols="4">
           <TextInput label="ID" v-model="id" readonly :clearable="false" />
-        </v-col>
-        <v-col cols="4">
-          <TextInput label="ID" v-model="userId" readonly :clearable="false" />
         </v-col>
         <v-col cols="4">
           <TextInput

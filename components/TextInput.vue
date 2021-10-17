@@ -8,13 +8,14 @@
       :clearable="clearable"
       :rules="rules"
       :label="label"
+      :type="type"
       outlined
       dense
       color="info"
       @input="$emit('input', $event)"
     />
   </div>
-</template >
+</template>
 <script lang="ts">
 import { ref, defineComponent } from '@nuxtjs/composition-api'
 export default defineComponent({
@@ -41,6 +42,10 @@ export default defineComponent({
       default: true,
     },
     label: {
+      type: String,
+      default: '',
+    },
+    type: {
       type: String,
       default: '',
     },

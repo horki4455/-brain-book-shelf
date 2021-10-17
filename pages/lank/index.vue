@@ -30,7 +30,7 @@
               />
             </v-col>
             <v-col cols="6">
-              <h4 class="mb-5">本の感想</h4>
+              <h4 class="mb-5">所感・まとめ</h4>
               {{ book.bookItem.think }}
             </v-col>
           </v-row>

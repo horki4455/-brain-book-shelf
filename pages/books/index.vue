@@ -107,7 +107,7 @@ export default defineComponent({
     const header = [
       { text: 'タイトル', value: 'bookItem.title' },
       { text: '著者', value: 'bookItem.author' },
-      { text: 'ジャンル', value: 'bookItem.published' },
+      { text: '発刊日', value: 'bookItem.published' },
       { text: 'タグ', value: 'bookItem.status' },
       { text: '編集', value: 'bookItem.edit' },
     ]

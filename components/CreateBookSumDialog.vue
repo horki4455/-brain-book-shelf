@@ -10,7 +10,7 @@
             <v-row class="mt-2">
               <v-col cols="4">
                 <TextInput
-                  label="タイトル"
+                  label="タイトル(必須)"
                   v-model="title"
                   :rules="[required]"
                 />
@@ -186,11 +186,13 @@ export default defineComponent({
     let serchedBookDate = ref([])
     const getResult = () => {
       axios
-        .get('https://www.googleapis.com/books/v1/volumes?q=' + keyword)
-        .then((response: any) => {
-          console.log('キーワード', keyword)
+        .get(
+          'https://www.googleapis.com/books/v1/volumes?q=search' + keyword.value
+        )
+        .then((data: any) => {
+          console.log('data', data)
           serchedBookDate.value = []
-          for (let b of response.data.items) {
+          for (let b of data.data.items) {
             let authors = b.volumeInfo.authors
             let price = b.saleInfo.listPrice
             let img = b.volumeInfo.imageLinks

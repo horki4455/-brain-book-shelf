@@ -8,7 +8,7 @@
           >
         </v-toolbar-title>
         <router-link to="lank">
-          <u class="text-white ml-5"> ランキング </u></router-link
+          <u class="text-white ml-5"> 最新本の感想一覧 </u></router-link
         >
         <router-link to="books">
           <u class="text-white ml-5"> 本棚一覧 </u></router-link
