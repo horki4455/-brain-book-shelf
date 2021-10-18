@@ -124,11 +124,10 @@ import {
   defineComponent,
   toRefs,
   reactive,
-  useFetch,
   useStore,
-  onMounted,
 } from '@nuxtjs/composition-api'
 import axios from 'axios'
+import { SelectedBook } from '@/types/books'
 export default defineComponent({
   props: {
     index: { type: Number },
@@ -168,6 +167,7 @@ export default defineComponent({
     const addBookData = () => {
       const bookItem = bookInput
       store.dispatch('addBookData', { bookItem })
+      initDialog()
       emit('close')
     }
     let selectedBook = ref('')
@@ -189,8 +189,7 @@ export default defineComponent({
         .get(
           'https://www.googleapis.com/books/v1/volumes?q=search' + keyword.value
         )
-        .then((data: any) => {
-          console.log('data', data)
+        .then((data) => {
           serchedBookDate.value = []
           for (let b of data.data.items) {
             let authors = b.volumeInfo.authors

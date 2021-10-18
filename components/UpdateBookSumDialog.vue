@@ -35,7 +35,22 @@
               <SelectInput label="タグ" v-model="status" />
             </v-col>
             <v-col cols="4">
+              <DateInput label="ユーザー" v-model="userId" readonly />
+            </v-col>
+            <v-col cols="4">
               <DateInput label="読了日" v-model="finishDay" />
+            </v-col>
+            <v-col cols="4">
+              <v-rating
+                empty-icon="mdi-star-outline"
+                full-icon="mdi-star"
+                half-icon="mdi-star-half-full"
+                hover
+                length="5"
+                size="24"
+                :value="ratingVal"
+                label="評価"
+              />
             </v-col>
           </v-row>
           <!-- TODO: 複数個登録可能にする -->
@@ -83,6 +98,7 @@ import {
 } from '@nuxtjs/composition-api'
 import { db } from '@/plugins/firebase'
 import dayjs from 'dayjs'
+import { Books } from '@/types/books'
 
 export default defineComponent({
   props: {
@@ -112,8 +128,10 @@ export default defineComponent({
       price: props.tableItems.price ? props.tableItems.price : '-',
       status: props.tableItems.status,
       published: props.tableItems.published ? props.tableItems.published : '-',
+      userId: props.tableItems.userId ? props.tableItems.userId : '-',
+      ratingVal: props.tableItems.ratingVal ? props.tableItems.ratingVal : 3,
     })
-    const defaultTableItems = reactive({
+    const defaultTableItems = reactive<Books>({
       id: '',
       author: '',
       title: '',
@@ -122,6 +140,8 @@ export default defineComponent({
       price: '',
       status: '',
       published: '',
+      userId: '',
+      ratingVal: '',
     })
 
     const deleteBookData = () => {
@@ -131,11 +151,10 @@ export default defineComponent({
     }
     // TODO: 例外処理敷く
     const editBookData = () => {
-      console.log('props.pageId')
       db.collection('bookItemsArray')
         .doc(props.pageId)
         .update({ bookItem: defaultTableItems })
-      console.log(defaultTableItems)
+      emit('fetch')
       emit('close')
     }
     // useFecthのメリット行かせていない。moutedで良いかも。

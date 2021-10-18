@@ -5,7 +5,14 @@
         <template v-slot:activator="{ on }">
           <v-btn class="text-white" v-on="on" text>
             <div v-if="userStatus">
-              <p>user: {{ $store.getters.getUserName }}</p>
+              <p>
+                ユーザー名:
+                {{
+                  $store.getters.getUserName
+                    ? $store.getters.getUserName
+                    : currentUserEmail
+                }}
+              </p>
             </div>
           </v-btn>
         </template>
@@ -20,7 +27,7 @@
           <v-list-item>
             <v-list-item-content>
               <v-list-item-title>
-                <router-link to="mypage">マイページ</router-link>
+                <router-link to="/mypage">マイページ</router-link>
               </v-list-item-title>
             </v-list-item-content>
           </v-list-item>
@@ -31,6 +38,7 @@
 </template>
 <script>
 import { defineComponent, useStore, useRouter } from '@nuxtjs/composition-api'
+import { auth } from '@/plugins/firebase'
 
 export default defineComponent({
   setup() {
@@ -39,6 +47,7 @@ export default defineComponent({
     const user = () => {
       return store.getters.user
     }
+    const currentUserEmail = auth.currentUser.email
     const userStatus = () => {
       // ログインするとtrue
       return store.getters.isSignedIn
@@ -47,7 +56,7 @@ export default defineComponent({
       store
         .dispatch('signOut')
         .then(() => {
-          router.go({ name: '/login' })
+          router.push({ name: '/login' })
         })
         .catch((err) => {
           alert(err.message)
@@ -57,6 +66,7 @@ export default defineComponent({
       userStatus,
       user,
       doLogout,
+      currentUserEmail,
     }
   },
 })

@@ -3,11 +3,11 @@
     <v-app class="eader-container">
       <v-app-bar color="green" app class="header-container">
         <v-toolbar-title>
-          <router-link to="introduction" class="text-white">
+          <router-link to="/introduction" class="text-white">
             <h3 class="text-white">Brain BookSheld</h3></router-link
           >
         </v-toolbar-title>
-        <router-link to="lank">
+        <router-link to="thinkIndex">
           <u class="text-white ml-5"> 最新本の感想一覧 </u></router-link
         >
         <router-link to="books">
@@ -16,8 +16,6 @@
         <v-spacer />
         <changeLoginStatus />
       </v-app-bar>
-      <!-- TODO:実装 -->
-      <!-- <v-breadcrumbs :items="items" divider="=>" large exact: true/> -->
       <v-main>
         <v-container>
           <nuxt />

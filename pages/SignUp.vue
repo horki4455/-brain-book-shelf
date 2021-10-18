@@ -7,7 +7,6 @@
 
       <div class="d-flex justify-content-center">
         <v-col cols="10" class="mb-0">
-          <!-- TODO:作成・ログインが機能していないので修正 -->
           <TextInput v-model="mailaddress" label="メールアドレス" />
         </v-col>
       </div>
@@ -63,7 +62,7 @@ export default defineComponent({
             name: 'login',
           })
         })
-        .catch((err: any) => {
+        .catch((err) => {
           alert('ユーザーが作成されませんでした')
           console.log(err.message)
         })

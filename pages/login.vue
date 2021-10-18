@@ -1,14 +1,6 @@
 <template>
   <div class="pt-10">
-    <!-- ログイン時 -->
-    <div v-if="userStatus" key="login">
-      <p>{{ user.displayName }}</p>
-
-      <p>ユーザー: {{ $store.getters.getUserName }}</p>
-      <v-btn color="red" @click="doLogout()">ログアウト</v-btn>
-    </div>
-    <!-- 未ログイン時 -->
-    <div v-else key="logout">
+    <div>
       <div class="d-flex justify-content-center">
         <h3>
           <p>brain-booksharfe</p>
@@ -87,34 +79,21 @@ export default defineComponent({
     const userStatus = computed(() => {
       return store.getters.isSignedIn
     })
-    const doLogin = () => {
-      store.dispatch('login').catch((err) => {
-        alert(err.message)
-      })
-    }
-    // ログアウト処理
-    const doLogout = () => {
-      store
-        .dispatch('signOut')
-        .then(() => {
-          alert('ログアウトしました')
-          // router.go({ name: '/login' })
-        })
-        .catch((err) => {
-          alert(err.message)
-        })
-    }
+
     // ログイン処理
-    const login = () => {
+    const login = async () => {
       auth
         .signInWithEmailAndPassword(mailaddress.value, password.value)
+        .then((result) => {
+          const user = result.user
+          store.commit('setUserUid', user.uid)
+          store.commit('setUserName', user.displayName)
+        })
         .then(() => {
           alert('ログインしました')
-          // router.go({ name: '/books' })
+          router.push({ name: 'books' })
         })
-        .catch((err) => {
-          alert(err.message)
-        })
+
         .catch((err) => {
           alert(err.message)
         })
@@ -124,8 +103,8 @@ export default defineComponent({
       password,
       user,
       userStatus,
-      doLogin,
-      doLogout,
+      // doLogin,
+      // doLogout,
       login,
     }
   },

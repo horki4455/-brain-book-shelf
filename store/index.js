@@ -71,6 +71,9 @@ export const getters = {
   getUserName(state) {
     return state.userName
   },
+  getUserEmail(state) {
+    return state.userEmail
+  },
   getBookItems(state) {
     return state.bookItemsArray
   },

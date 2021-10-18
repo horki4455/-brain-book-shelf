@@ -7,7 +7,6 @@ export default async function ({ store }) {
     })
   })
   if (user) {
-    console.log(user)
     store.commit('setUserUid', user.uid)
     store.commit('setUserName', user.displayName)
   }

@@ -4,15 +4,15 @@
       各種ランキングです。他の人のおすすめを確認してみましょう。
       <br />読み解したい本がなければ確認しましょう。
     </div>
-
     <div class="my-4">
       <Divider :message="'本の感想'" />
 
-      <div v-for="book in unrefedBookItems" :key="book.id">
+      <div v-for="book in $store.getters.getBookItems" :key="book.id">
         <v-card class="ma-3">
           <v-row class="pa-3 my-3" v-if="book.bookItem.think">
             <v-col cols="6">
               <div class="mb-1">{{ book.bookItem.title }}</div>
+
               <img
                 class="img mb-4 ml-3"
                 src="@/assets/bookImage.jpeg"
@@ -30,23 +30,27 @@
               />
             </v-col>
             <v-col cols="6">
-              <h4 class="mb-5">所感・まとめ</h4>
-              {{ book.bookItem.think }}
+              <v-textarea
+                @click="moveToDetail(book.id)"
+                class="mt-5"
+                :value="book.bookItem.think"
+                outlined
+                name="input-7-4"
+                label="所感・まとめ"
+                readonly
+              />
             </v-col>
           </v-row>
         </v-card>
       </div>
+      <!-- TODO:ページネーションの設定 -->
       <v-pagination v-model="page" :length="6" />
     </div>
   </div>
 </template>
 <script lang="ts">
 import {
-  ref,
   defineComponent,
-  reactive,
-  toRefs,
-  computed,
   useFetch,
   useStore,
   useRouter,
@@ -61,11 +65,8 @@ export default defineComponent({
     // 詳細遷移処理
     const moveToDetail = (id: number) => {
       console.log(id)
-      router.push(`lank/${id}`)
+      router.push(`books/${id}`)
     }
-    const unrefedBookItems = computed(() => {
-      return store.getters.getBookItems.filter((v: any) => v.bookItem)
-    })
 
     useFetch(async () => {
       try {
@@ -85,7 +86,6 @@ export default defineComponent({
 
     return {
       // データ
-      unrefedBookItems,
       // メソッド
       moveToDetail,
     }

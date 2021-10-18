@@ -18,6 +18,7 @@
         :pageId="$route.params.id"
         @close="closeDialog"
         :tableItems="tableItems"
+        @fetch="fetchBook"
       />
     </v-dialog>
     <!-- TODO: i18n化してコンポーネントに切り分け-->
@@ -28,7 +29,6 @@
     <h3 class="border-bottom border-secondary" style="padding: 10px">
       <v-icon class="pr-3">mdi-chevron-triple-right</v-icon>情報詳細
     </h3>
-
     <div>
       <v-row class="mt-2">
         <v-col cols="12"> </v-col>
@@ -80,6 +80,29 @@
             :clearable="false"
           />
         </v-col>
+        <v-col cols="4">
+          <TextInput
+            label="ユーザーID"
+            v-model="userId"
+            readonly
+            :clearable="false"
+          />
+        </v-col>
+        <v-col cols="4">
+          <div class="font-size">本の評価</div>
+          <div class="rating-style">
+            <v-rating
+              empty-icon="mdi-star-outline"
+              full-icon="mdi-star"
+              half-icon="mdi-star-half-full"
+              hover
+              readonly
+              length="5"
+              size="24"
+              :value="ratingVal"
+            />
+          </div>
+        </v-col>
       </v-row>
       <!-- TODO: 複数個登録可能にする -->
       <div class="my-9">
@@ -113,12 +136,13 @@ export default {
       status: '',
       think: '',
       userId: '',
+      ratingVal: '',
     })
     const route = useRoute()
     const store = useStore()
     const pageId = route.value.params.id
+    // 表示データの処理
     let FetchedbookItem = ref(null)
-
     const fetchBook = async () => {
       const docRef = db.collection('bookItemsArray').doc(pageId)
       FetchedbookItem.value = await docRef.get().then((doc) => doc.data())
@@ -131,6 +155,7 @@ export default {
       tableItems.status = FetchedbookItem.value.bookItem.status
       tableItems.think = FetchedbookItem.value.bookItem.think
       tableItems.userId = FetchedbookItem.value.bookItem.userId
+      tableItems.ratingVal = FetchedbookItem.value.bookItem.ratingVal
     }
     fetchBook() //結局createdと同じタイミングのよう
     const isValid = computed(() => {
@@ -148,11 +173,22 @@ export default {
     return {
       ...toRefs(tableItems),
       tableItems,
+      // メソッド
       ToggleDialog,
       closeDialog,
       isValid,
+      fetchBook,
     }
   },
 }
 </script>
-<style></style>
+<style scoped>
+.rating-style {
+  outline: 0.5px solid black;
+  opacity: 0.6;
+}
+.font-size {
+  font-size: 0.125rem;
+  margin-bottom: 3px;
+}
+</style>
