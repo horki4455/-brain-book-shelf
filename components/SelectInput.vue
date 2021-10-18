@@ -1,16 +1,15 @@
 <template>
   <div>
-    <v-text-field
+    <v-select
       class="my-5"
+      :items="tagStatus"
       :value="value"
       :readonly="readonly"
       :disabled="disabled"
       :clearable="clearable"
-      :rules="rules"
       :label="label"
-      :type="type"
-      outlined
       dense
+      outlined
       color="info"
       @input="$emit('input', $event)"
     />
@@ -25,10 +24,6 @@ export default defineComponent({
       type: [String, Boolean],
       default: '',
     },
-    rules: {
-      type: Array,
-      default: () => [],
-    },
     readonly: {
       type: Boolean,
       default: false,
@@ -39,16 +34,18 @@ export default defineComponent({
     },
     clearable: {
       type: Boolean,
-      default: true,
+      default: false,
     },
     label: {
       type: String,
       default: '',
     },
-    type: {
-      type: String,
-      default: '',
-    },
+  },
+  setup() {
+    const tagStatus = ['未読', '読了', '途中']
+    return {
+      tagStatus,
+    }
   },
 })
 </script>

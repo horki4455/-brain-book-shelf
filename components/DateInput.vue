@@ -28,8 +28,10 @@
         locale="ja"
         :value="value"
         :show-current="false"
-        @click:clear="$emit('input', $event)"
+        @input="$emit('input', $event)"
       >
+        <!-- inputで渡すと、 $eventに指定した引数で親のvalueで渡ってきたpropsを更新する -->
+        <!-- $eventには、選択された日付の文字列が張っている -->
         <v-btn text color="primary" @click="menu = false">Cancel</v-btn>
         <v-btn text color="primary" @click="$refs.menu.save(value)">OK</v-btn>
       </v-date-picker>
@@ -38,7 +40,7 @@
 </template>
 
 <script lang="ts">
-import { ref, defineComponent, reactive } from '@vue/composition-api'
+import { ref, defineComponent, reactive } from '@nuxtjs/composition-api'
 export default defineComponent({
   name: 'DateInput',
   props: {
