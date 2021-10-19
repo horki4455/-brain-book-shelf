@@ -49,6 +49,12 @@
       @click:row="moveToDetail($event.id)"
     >
       <!-- 上のやつの説明：any型のデータが渡って（emitされて）きているので、それを受け取る＄event -->
+      <template v-slot:item.bookItem.title="{ item }">
+        <v-icon v-if="isMine(item.bookItem.userId)" class="mr-3"
+          >mdi-chevron-triple-right</v-icon
+        >
+        {{ item.bookItem.title }}
+      </template>
       <template v-slot:item.bookItem.status="{ item }">
         <v-chip small dark :color="filterTagColor(item.bookItem.status)">{{
           item.bookItem.status
@@ -150,6 +156,14 @@ export default defineComponent({
       }
     })
 
+    const isMine = (userId: string) => {
+      if (store.getters.getUserUid === userId) {
+        return true
+      } else {
+        return false
+      }
+    }
+
     return {
       // データ
       header,
@@ -160,6 +174,7 @@ export default defineComponent({
       filterTagColor,
       filteredTag,
       closeDialog,
+      isMine,
     }
   },
 })

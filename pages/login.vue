@@ -30,7 +30,7 @@
               dark
               rounded
               width="214"
-              @click="login()"
+              @click="emailLogin()"
               >メールアドレスでログイン</v-btn
             >
             <v-btn
@@ -38,7 +38,7 @@
               dark
               rounded
               width="214"
-              @click="doLogin()"
+              @click="doGoogleLogin()"
               class="ml-3"
               >googleでログイン</v-btn
             >
@@ -73,15 +73,15 @@ export default defineComponent({
     const router = useRouter()
     const mailaddress = ref('')
     const password = ref('')
-    const user = computed(() => {
-      return store.getters.user
-    })
     const userStatus = computed(() => {
       return store.getters.isSignedIn
     })
+    const doGoogleLogin = () => {
+      store.dispatch('googleLogin')
+    }
 
-    // ログイン処理
-    const login = async () => {
+    // ログイン処理・TODO:これもstoreで管理へ移行
+    const emailLogin = async () => {
       auth
         .signInWithEmailAndPassword(mailaddress.value, password.value)
         .then((result) => {
@@ -101,11 +101,10 @@ export default defineComponent({
     return {
       mailaddress,
       password,
-      user,
+      // user,
       userStatus,
-      // doLogin,
-      // doLogout,
-      login,
+      doGoogleLogin,
+      emailLogin,
     }
   },
 })

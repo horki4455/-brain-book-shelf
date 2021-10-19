@@ -26,7 +26,7 @@ export const mutations = {
 }
 
 export const actions = {
-  login({ commit }) {
+  googleLogin({ commit }) {
     const provider = new firebase.auth.GoogleAuthProvider()
     firebase
       .auth()
@@ -48,7 +48,21 @@ export const actions = {
       })
   },
   signOut() {
-    return auth.signOut()
+    // レンダリングしていない
+    auth
+      .signOut()
+      .then(() => {
+        console.log('ログアウトしました')
+      })
+      .then(() => {
+        this.$router.push({
+          name: 'login',
+        })
+      })
+      .catch(function (error) {
+        const errorCode = error.code
+        console.log('error : ' + errorCode)
+      })
   },
   addBookData(_, Item) {
     bookItemsArrayRef
@@ -60,10 +74,13 @@ export const actions = {
       })
   },
 }
-
 export const getters = {
   getUserUid(state) {
     return state.userUid
+  },
+  getCurrentUserEmail(state) {
+    // TODO:修正
+    return state.curreId
   },
   isAuthenticated(state) {
     return !!state.userUid
@@ -71,16 +88,10 @@ export const getters = {
   getUserName(state) {
     return state.userName
   },
-  getUserEmail(state) {
-    return state.userEmail
-  },
   getBookItems(state) {
     return state.bookItemsArray
   },
   isSignedIn(state) {
     return state.userUid !== ''
-  },
-  user(state) {
-    return state.userUid
   },
 }

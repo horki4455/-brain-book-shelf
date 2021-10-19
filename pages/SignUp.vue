@@ -47,9 +47,9 @@ export default defineComponent({
       password: '',
       mailaddress: '',
     })
-    const user = computed(() => {
-      return store.getters.user
-    })
+    // const user = computed(() => {
+    //   return store.getters.user
+    // })
     const userStatus = computed(() => {
       return store.getters.isSignedIn
     })
@@ -70,7 +70,7 @@ export default defineComponent({
 
     return {
       ...toRefs(datas),
-      user,
+      // user,
       userStatus,
       signUp,
     }

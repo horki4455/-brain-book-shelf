@@ -24,7 +24,7 @@
     <!-- TODO: i18n化してコンポーネントに切り分け-->
     <div class="text-muted small my-6 ml-4">
       読んだ本のページ詳細ページです
-      <br />編集・削除を行えます。要約を読み返し、自分の知識を深めましょう。
+      <br />自分の投稿の場合、編集・削除を行えます。要約を読み返し、自分の知識を深めましょう。
     </div>
     <h3 class="border-bottom border-secondary" style="padding: 10px">
       <v-icon class="pr-3">mdi-chevron-triple-right</v-icon>情報詳細

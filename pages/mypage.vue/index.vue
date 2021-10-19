@@ -41,13 +41,13 @@ import { db, auth } from '@/plugins/firebase'
 
 export default defineComponent({
   setup() {
-    const currentUserEmail = auth.currentUser.email
     const store = useStore()
     const totalBookData = computed(() => {
       return store.getters.getBookItems.filter(
         (v: any) => v.bookItem.userId === store.getters.getUserUid
       ).length
     })
+    const currentUserEmail = store.getters.getCurrentUserEmail
     useFetch(async () => {
       try {
         db.collection('bookItemsArray').onSnapshot((snapshot) => {
