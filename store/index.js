@@ -43,12 +43,30 @@ export const actions = {
         })
       })
       .catch(function (error) {
-        var errorCode = error.code
+        const errorCode = error.code
         console.log('error : ' + errorCode)
       })
   },
+  emailLogin({ commit }, { Email, Pass }) {
+    auth
+      .signInWithEmailAndPassword(Email, Pass)
+      .then((result) => {
+        const user = result.user
+        console.log('覗き見', user)
+        commit('setUserUid', user.uid)
+        commit('setUserName', user.displayName)
+      })
+      .then(() => {
+        alert('ログインしました')
+        router.push({ name: 'books' })
+      })
+
+      .catch((err) => {
+        alert(err.message)
+      })
+  },
   signOut() {
-    // レンダリングしていない
+    // レンダリングしていない、てかログアウトアクションが即時に動いていない
     auth
       .signOut()
       .then(() => {

@@ -84,7 +84,6 @@ import { auth } from '@/plugins/firebase'
 export default defineComponent({
   setup() {
     const store = useStore()
-    const router = useRouter()
     const mailaddress = ref('')
     const password = ref('')
     const testUserMailaddress = ref('test@example.com')
@@ -96,44 +95,18 @@ export default defineComponent({
       store.dispatch('googleLogin')
     }
     // TODO:流石にこれはクソコードすぎ,storeでまとめて、ここからデータだけ送る形にする
-    const testLogin = async () => {
-      auth
-        .signInWithEmailAndPassword(
-          testUserMailaddress.value,
-          testUserPassword.value
-        )
-        .then((result) => {
-          const user = result.user
-          store.commit('setUserUid', user.uid)
-          store.commit('setUserName', user.displayName)
-        })
-        .then(() => {
-          alert('テストユーザーでログインしました')
-          router.push({ name: 'books' })
-        })
-
-        .catch((err) => {
-          alert(err.message)
-        })
+    const testLogin = () => {
+      store.dispatch('emailLogin', {
+        Email: testUserMailaddress.value,
+        Pass: testUserPassword.value,
+      })
     }
 
-    // ログイン処理・TODO:これもstoreで管理へ移行
-    const emailLogin = async () => {
-      auth
-        .signInWithEmailAndPassword(mailaddress.value, password.value)
-        .then((result) => {
-          const user = result.user
-          store.commit('setUserUid', user.uid)
-          store.commit('setUserName', user.displayName)
-        })
-        .then(() => {
-          alert('ログインしました')
-          router.push({ name: 'books' })
-        })
-
-        .catch((err) => {
-          alert(err.message)
-        })
+    const emailLogin = () => {
+      store.dispatch('emailLogin', {
+        Email: mailaddress.value,
+        Pass: password.value,
+      })
     }
     const required = (value: string) => !!value || '必ず入力してください'
     const limit_length = (value: string) =>
