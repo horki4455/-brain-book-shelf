@@ -127,6 +127,7 @@ import {
   useStore,
 } from '@nuxtjs/composition-api'
 import axios from 'axios'
+// TODO: うまくつなぎ込めていない
 import { SelectedBook } from '@/types/books'
 export default defineComponent({
   props: {
@@ -134,7 +135,7 @@ export default defineComponent({
     linkable: { type: Boolean, default: true },
     book: { type: Object },
   },
-  setup(props, { emit }) {
+  setup(_, { emit }) {
     const store = useStore()
     const required = (value: string) => !!value || '必ず入力してください'
     const limit_length = (value: string) =>
