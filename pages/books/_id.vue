@@ -89,22 +89,9 @@
           />
         </v-col>
         <v-col cols="4">
-          <div class="font-size">本の評価</div>
-          <div class="rating-style">
-            <v-rating
-              empty-icon="mdi-star-outline"
-              full-icon="mdi-star"
-              half-icon="mdi-star-half-full"
-              hover
-              readonly
-              length="5"
-              size="24"
-              :value="ratingVal"
-            />
-          </div>
+          <Rating v-model="ratingVal" readonly />
         </v-col>
       </v-row>
-      <!-- TODO: 複数個登録可能にする -->
       <div class="my-9">
         <v-textarea v-model="think" outlined readonly label="要約/感想" />
       </div>
@@ -142,7 +129,7 @@ export default {
     const store = useStore()
     const pageId = route.value.params.id
     // 表示データの処理
-    let FetchedbookItem = ref(null)
+    let FetchedbookItem = ref<any>(null)
     const fetchBook = async () => {
       const docRef = db.collection('bookItemsArray').doc(pageId)
       FetchedbookItem.value = await docRef.get().then((doc) => doc.data())
@@ -157,7 +144,7 @@ export default {
       tableItems.userId = FetchedbookItem.value.bookItem.userId
       tableItems.ratingVal = FetchedbookItem.value.bookItem.ratingVal
     }
-    fetchBook() //結局createdと同じタイミングのよう
+    fetchBook() //結局createdと同じタイミング
     const isValid = computed(() => {
       if (store.getters.getUserUid === tableItems.userId) {
         return true
@@ -182,13 +169,3 @@ export default {
   },
 }
 </script>
-<style scoped>
-.rating-style {
-  outline: 0.5px solid black;
-  opacity: 0.6;
-}
-.font-size {
-  font-size: 0.125rem;
-  margin-bottom: 3px;
-}
-</style>

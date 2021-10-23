@@ -119,10 +119,11 @@ export default defineComponent({
     ]
     const searchKeys = reactive({
       title: '',
-      tag: '',
+      tag: null,
     })
+    // フィルター検索機能
     const filteredTag = computed(() => {
-      if (searchKeys.tag === '') {
+      if (searchKeys.tag === null) {
         return store.getters.getBookItems
       } else {
         return store.getters.getBookItems.filter(
@@ -130,6 +131,7 @@ export default defineComponent({
         )
       }
     })
+    // ダイアログ開閉機能
     const ToggleDialog = ref(false)
     const closeDialog = () => {
       ToggleDialog.value = false
@@ -140,6 +142,7 @@ export default defineComponent({
       console.log(id)
       router.push(`books/${id}`)
     }
+    // 一覧取得機能
     useFetch(async () => {
       try {
         db.collection('bookItemsArray').onSnapshot((snapshot) => {

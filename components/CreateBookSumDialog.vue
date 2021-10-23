@@ -20,27 +20,27 @@
                 <TextInput label="ID" v-model="id" />
               </v-col>
               <v-col cols="4">
-                <!-- TODO：再検索機能 -->
                 <TextInput label="著者" v-model="author" />
               </v-col>
             </v-row>
             <v-row class="mt-0">
               <v-col cols="4">
-                <TextInput label="価格" v-model="price" />
+                <TextInput
+                  label="価格"
+                  v-model="price"
+                  :rules="[limit_length]"
+                />
               </v-col>
               <v-col cols="4">
                 <SelectInput label="タグ" v-model="status" />
               </v-col>
               <v-col cols="4">
-                <TextInput
-                  label="発行日"
-                  v-model="published"
-                  :rules="[limit_length]"
-                  :counter="10"
-                />
+                <TextInput label="発行日" v-model="published" :counter="10" />
+              </v-col>
+              <v-col cols="4">
+                <Rating v-model="ratingVal" />
               </v-col>
             </v-row>
-            <!-- TODO: 複数個登録可能にする -->
             <div class="my-9">
               <v-textarea v-model="think" outlined label="要約/感想" />
             </div>
@@ -82,7 +82,6 @@
               @click="GBAToggleDialog = false"
               >閉じる</v-btn
             >
-            <!-- TODO: ボタンコンポーネントも作らないとな -->
             <v-btn color="green" width="214" rounded @click="getResult"
               >検索</v-btn
             >
@@ -127,19 +126,22 @@ import {
   useStore,
 } from '@nuxtjs/composition-api'
 import axios from 'axios'
-// TODO: うまくつなぎ込めていない
+// TODO: TSうまくつなぎ込めていない
 import { SelectedBook } from '@/types/books'
+import dayjs from 'dayjs'
 export default defineComponent({
   props: {
     index: { type: Number },
-    linkable: { type: Boolean, default: true },
+    linkable: { type: [Boolean, Number], default: true },
     book: { type: Object },
   },
   setup(_, { emit }) {
     const store = useStore()
-    const required = (value: string) => !!value || '必ず入力してください'
-    const limit_length = (value: string) =>
-      value.length <= 30 || '30文字以内で入力してください'
+    const createDay = dayjs(new Date()).format('YYYY-MM-DD')
+    const required = (value: string | number) =>
+      !!value || '必ず入力してください'
+    const limit_length = (value: string | number) =>
+      String(value).length <= 30 || '30文字以内で入力してください'
 
     const bookInput = reactive({
       id: '',
@@ -150,6 +152,8 @@ export default defineComponent({
       status: '未読',
       published: '',
       userId: store.getters.getUserUid,
+      createDay: createDay,
+      ratingVal: 0,
     })
     const defaultbookInput = reactive({
       id: '',
@@ -159,8 +163,8 @@ export default defineComponent({
       price: '',
       status: '未読',
       published: '',
+      ratingVal: 0,
     })
-    // TODO:実装されてない
     const initDialog = () => {
       Object.assign(bookInput, defaultbookInput)
     }
@@ -217,6 +221,7 @@ export default defineComponent({
       ...toRefs(bookInput),
       keyword,
       // メソッド
+      createDay,
       addBookData,
       required,
       limit_length,

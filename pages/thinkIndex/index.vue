@@ -26,7 +26,7 @@
                 readonly
                 length="5"
                 size="24"
-                value="3"
+                :value="book.bookItem.ratingVal"
               />
             </v-col>
             <v-col cols="6">
@@ -43,8 +43,6 @@
           </v-row>
         </v-card>
       </div>
-      <!-- TODO:ページネーションの設定 -->
-      <v-pagination v-model="page" :length="6" />
     </div>
   </div>
 </template>

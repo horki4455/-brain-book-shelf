@@ -10,7 +10,6 @@
         <v-form>
           <div class="d-flex justify-content-center">
             <v-col cols="10" class="mb-0">
-              <!-- TODO:形状の変更 -->
               <!-- TODO:clearable押すとエラーたまになる -->
               <TextInput
                 type="email"
@@ -94,7 +93,7 @@ export default defineComponent({
     const doGoogleLogin = () => {
       store.dispatch('googleLogin')
     }
-    // TODO:流石にこれはクソコードすぎ,storeでまとめて、ここからデータだけ送る形にする
+
     const testLogin = () => {
       store.dispatch('emailLogin', {
         Email: testUserMailaddress.value,

@@ -13,41 +13,34 @@
         <v-col cols="4">
           <div class="mb-3">
             これまであなたがまとめた本は {{ totalBookData }}冊 です！
+            {{ nowDate }}
           </div>
         </v-col>
       </v-row>
     </v-card>
-
-    <v-row class="d-flex justify-content-center my-3">
-      <v-col cols="5" class="mr-7">
-        <lineChart />
-      </v-col>
-      <v-col cols="5">
-        <div>読んだ本の種類</div>
-        <circleChart />
-      </v-col>
-    </v-row>
   </div>
 </template>
 <script lang="ts">
 import {
   defineComponent,
-  ref,
   useFetch,
   useStore,
   computed,
 } from '@nuxtjs/composition-api'
-import { db, auth } from '@/plugins/firebase'
+import { db } from '@/plugins/firebase'
+import dayjs from 'dayjs'
 
 export default defineComponent({
   setup() {
     const store = useStore()
+    const nowDate = dayjs(new Date()).format()
     const totalBookData = computed(() => {
       return store.getters.getBookItems.filter(
         (v: any) => v.bookItem.userId === store.getters.getUserUid
       ).length
     })
     const currentUserEmail = store.getters.getCurrentUserEmail
+    // firestoreからドキュメントを全部取ってきて、データをstoreに入れている。
     useFetch(async () => {
       try {
         db.collection('bookItemsArray').onSnapshot((snapshot) => {
@@ -65,6 +58,7 @@ export default defineComponent({
     })
 
     return {
+      nowDate,
       currentUserEmail,
       totalBookData,
     }

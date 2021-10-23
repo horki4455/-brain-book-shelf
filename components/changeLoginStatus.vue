@@ -4,7 +4,6 @@
       <v-menu offset-y>
         <template v-slot:activator="{ on }">
           <v-btn class="text-white" v-on="on" text>
-            {{ userStatus }}
             <div v-if="userStatus">
               <p>
                 ユーザー名:

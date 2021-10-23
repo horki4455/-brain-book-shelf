@@ -52,27 +52,25 @@ export const actions = {
       .signInWithEmailAndPassword(Email, Pass)
       .then((result) => {
         const user = result.user
-        console.log('覗き見', user)
         commit('setUserUid', user.uid)
         commit('setUserName', user.displayName)
       })
       .then(() => {
         alert('ログインしました')
-        router.push({ name: 'books' })
+        this.$router.push({ name: 'introduction' })
       })
 
       .catch((err) => {
         alert(err.message)
       })
   },
-  signOut() {
-    // レンダリングしていない、てかログアウトアクションが即時に動いていない
+  signOut({ commit }) {
+    // TODO:レンダリングしていない、てかログアウトアクションが即時に動いていない
     auth
       .signOut()
       .then(() => {
-        console.log('ログアウトしました')
-      })
-      .then(() => {
+        commit('setUserUid', '')
+        commit('setUserName', '')
         this.$router.push({
           name: 'login',
         })
@@ -96,11 +94,12 @@ export const getters = {
   getUserUid(state) {
     return state.userUid
   },
+  // TODO:curreIdの修正
   getCurrentUserEmail(state) {
-    // TODO:修正
     return state.curreId
   },
   isAuthenticated(state) {
+    // 「!!」明示的にtrueかfalseかで処理するよっていってる。
     return !!state.userUid
   },
   getUserName(state) {
