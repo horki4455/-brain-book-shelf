@@ -40,7 +40,7 @@
 </template>
 
 <script lang="ts">
-import { ref, defineComponent, reactive } from '@nuxtjs/composition-api'
+import { defineComponent } from '@nuxtjs/composition-api'
 export default defineComponent({
   name: 'DateInput',
   props: {

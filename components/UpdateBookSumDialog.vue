@@ -3,7 +3,7 @@
     <v-card>
       <v-card-title class="d-flex justify-content-center">
         <span>読書データの編集</span>
-        <!-- TODO:ロード中の処理は何かすべき -->
+        <!-- TODO:ロード中の処理追加 -->
         <spacer />
       </v-card-title>
       <v-card-text>
@@ -41,19 +41,9 @@
               <DateInput label="読了日" v-model="finishDay" />
             </v-col>
             <v-col cols="4">
-              <v-rating
-                empty-icon="mdi-star-outline"
-                full-icon="mdi-star"
-                half-icon="mdi-star-half-full"
-                hover
-                length="5"
-                size="24"
-                :value="ratingVal"
-                label="評価"
-              />
+              <Rating v-model="ratingVal" />
             </v-col>
           </v-row>
-          <!-- TODO: 複数個登録可能にする -->
           <div class="my-9">
             <v-textarea v-model="think" outlined label="要約/感想" />
           </div>
@@ -115,9 +105,7 @@ export default defineComponent({
     const router = useRouter()
     const store = useStore()
     const now = dayjs().format('YYYY-MM-DD')
-    const required = (value: string) => !!value || '必ず入力してください'
-    const limit_length = (value: string) =>
-      value.length <= 30 || '30文字以内で入力してください'
+    const required = (value: any) => !!value || '必ず入力してください'
 
     const getTableItems = reactive({
       id: props.tableItems.id ? props.tableItems.id : ' -',
@@ -157,7 +145,7 @@ export default defineComponent({
       emit('fetch')
       emit('close')
     }
-    // useFecthのメリット行かせていない。moutedで良いかも。
+    // TODO: useFecthのメリット行かせていない。moutedで良いかも。
     useFetch(async () => {
       try {
         db.collection('bookItemsArray').onSnapshot((snapshot) => {

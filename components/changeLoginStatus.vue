@@ -37,30 +37,22 @@
   </div>
 </template>
 <script>
-import { defineComponent, useStore, useRouter } from '@nuxtjs/composition-api'
-import { auth } from '@/plugins/firebase'
+import { defineComponent, useStore } from '@nuxtjs/composition-api'
 
 export default defineComponent({
   setup() {
     const store = useStore()
-    const router = useRouter()
     const user = () => {
       return store.getters.user
     }
-    const currentUserEmail = auth.currentUser.email
+    const currentUserEmail = store.getters.getCurrentUserEmail
     const userStatus = () => {
-      // ログインするとtrue
       return store.getters.isSignedIn
     }
     const doLogout = () => {
-      store
-        .dispatch('signOut')
-        .then(() => {
-          router.push({ name: '/login' })
-        })
-        .catch((err) => {
-          alert(err.message)
-        })
+      store.dispatch('signOut').catch((err) => {
+        alert(err.message)
+      })
     }
     return {
       userStatus,

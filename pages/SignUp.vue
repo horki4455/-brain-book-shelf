@@ -7,12 +7,22 @@
 
       <div class="d-flex justify-content-center">
         <v-col cols="10" class="mb-0">
-          <TextInput v-model="mailaddress" label="メールアドレス" />
+          <!-- TODO:正規表現で「＠」必須にする -->
+          <TextInput
+            v-model="mailaddress"
+            label="メールアドレス"
+            :rules="[required]"
+          />
         </v-col>
       </div>
       <div class="d-flex justify-content-center">
         <v-col cols="10">
-          <TextInput type="password" v-model="password" label="password" />
+          <TextInput
+            type="password"
+            v-model="password"
+            label="password"
+            :rules="[required, limit_length]"
+          />
         </v-col>
       </div>
     </v-form>
@@ -47,9 +57,6 @@ export default defineComponent({
       password: '',
       mailaddress: '',
     })
-    const user = computed(() => {
-      return store.getters.user
-    })
     const userStatus = computed(() => {
       return store.getters.isSignedIn
     })
@@ -67,12 +74,16 @@ export default defineComponent({
           console.log(err.message)
         })
     }
+    const required = (value: string) => !!value || '必ず入力してください'
+    const limit_length = (value: string) =>
+      value.length <= 12 || '12文字以内で入力してください'
 
     return {
       ...toRefs(datas),
-      user,
       userStatus,
       signUp,
+      required,
+      limit_length,
     }
   },
 })

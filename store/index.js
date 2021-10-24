@@ -26,7 +26,7 @@ export const mutations = {
 }
 
 export const actions = {
-  login({ commit }) {
+  googleLogin({ commit }) {
     const provider = new firebase.auth.GoogleAuthProvider()
     firebase
       .auth()
@@ -43,12 +43,42 @@ export const actions = {
         })
       })
       .catch(function (error) {
-        var errorCode = error.code
+        const errorCode = error.code
         console.log('error : ' + errorCode)
       })
   },
-  signOut() {
-    return auth.signOut()
+  emailLogin({ commit }, { Email, Pass }) {
+    auth
+      .signInWithEmailAndPassword(Email, Pass)
+      .then((result) => {
+        const user = result.user
+        commit('setUserUid', user.uid)
+        commit('setUserName', user.displayName)
+      })
+      .then(() => {
+        alert('ログインしました')
+        this.$router.push({ name: 'introduction' })
+      })
+
+      .catch((err) => {
+        alert(err.message)
+      })
+  },
+  signOut({ commit }) {
+    // TODO:レンダリングしていない、てかログアウトアクションが即時に動いていない
+    auth
+      .signOut()
+      .then(() => {
+        commit('setUserUid', '')
+        commit('setUserName', '')
+        this.$router.push({
+          name: 'login',
+        })
+      })
+      .catch(function (error) {
+        const errorCode = error.code
+        console.log('error : ' + errorCode)
+      })
   },
   addBookData(_, Item) {
     bookItemsArrayRef
@@ -60,27 +90,25 @@ export const actions = {
       })
   },
 }
-
 export const getters = {
   getUserUid(state) {
     return state.userUid
   },
+  // TODO:curreIdの修正
+  getCurrentUserEmail(state) {
+    return state.curreId
+  },
   isAuthenticated(state) {
+    // 「!!」明示的にtrueかfalseかで処理するよっていってる。
     return !!state.userUid
   },
   getUserName(state) {
     return state.userName
-  },
-  getUserEmail(state) {
-    return state.userEmail
   },
   getBookItems(state) {
     return state.bookItemsArray
   },
   isSignedIn(state) {
     return state.userUid !== ''
-  },
-  user(state) {
-    return state.userUid
   },
 }

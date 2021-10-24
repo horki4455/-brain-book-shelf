@@ -49,6 +49,12 @@
       @click:row="moveToDetail($event.id)"
     >
       <!-- 上のやつの説明：any型のデータが渡って（emitされて）きているので、それを受け取る＄event -->
+      <template v-slot:item.bookItem.title="{ item }">
+        <v-icon v-if="isMine(item.bookItem.userId)" class="mr-3"
+          >mdi-chevron-triple-right</v-icon
+        >
+        {{ item.bookItem.title }}
+      </template>
       <template v-slot:item.bookItem.status="{ item }">
         <v-chip small dark :color="filterTagColor(item.bookItem.status)">{{
           item.bookItem.status
@@ -113,10 +119,11 @@ export default defineComponent({
     ]
     const searchKeys = reactive({
       title: '',
-      tag: '',
+      tag: null,
     })
+    // フィルター検索機能
     const filteredTag = computed(() => {
-      if (searchKeys.tag === '') {
+      if (searchKeys.tag === null) {
         return store.getters.getBookItems
       } else {
         return store.getters.getBookItems.filter(
@@ -124,6 +131,7 @@ export default defineComponent({
         )
       }
     })
+    // ダイアログ開閉機能
     const ToggleDialog = ref(false)
     const closeDialog = () => {
       ToggleDialog.value = false
@@ -134,6 +142,7 @@ export default defineComponent({
       console.log(id)
       router.push(`books/${id}`)
     }
+    // 一覧取得機能
     useFetch(async () => {
       try {
         db.collection('bookItemsArray').onSnapshot((snapshot) => {
@@ -150,6 +159,14 @@ export default defineComponent({
       }
     })
 
+    const isMine = (userId: string) => {
+      if (store.getters.getUserUid === userId) {
+        return true
+      } else {
+        return false
+      }
+    }
+
     return {
       // データ
       header,
@@ -160,6 +177,7 @@ export default defineComponent({
       filterTagColor,
       filteredTag,
       closeDialog,
+      isMine,
     }
   },
 })

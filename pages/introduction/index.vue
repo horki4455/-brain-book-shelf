@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h3 class="text-align-center">アプリの使い方</h3>
+    <h3 class="text-align-center">アプリの説明</h3>
     <div class="text-muted small my-6 ml-4">
       このアプリケーションは、頭の中に本棚を作ることを目標に作られたアプリケーションです。<br />
     </div>
@@ -9,6 +9,11 @@
       <div>ステップ１：　本を読む</div>
       <div>ステップ２：　本のまとめ・感想をつくる</div>
       <div>ステップ３：　読んだ本を読み返す</div>
+
+      <div class="mt-5">＊　編集は、自分の投稿したもののみ可能です。</div>
+      <div>
+        ＊　マイページでは自分の（作成中）チャートで自分の投稿したものが確認できます。
+      </div>
     </div>
     <Divider message="アプリ使用技術一覧" />
     <div>言語：　typescript（基本的なインターフェース・型の種類の使用)</div>
