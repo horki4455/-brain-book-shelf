@@ -8,7 +8,6 @@
       </v-card-title>
       <v-card-text>
         <div>
-          <!-- TODO: dateInputとうまくかみ合っていない -->
           <v-row class="mt-2">
             <v-col cols="4">
               <TextInput
