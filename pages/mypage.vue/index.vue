@@ -36,11 +36,11 @@ export default defineComponent({
     const nowDate = dayjs(new Date()).format()
     const totalBookData = computed(() => {
       return store.getters.getBookItems.filter(
-        (v: any) => v.bookItem.userId === store.getters.getUserUid
+        (v) => v.bookItem.userId === store.getters.getUserUid
       ).length
     })
     const currentUserEmail = store.getters.getCurrentUserEmail
-    // firestoreからドキュメントを全部取ってきて、データをstoreに入れている。
+
     useFetch(async () => {
       try {
         db.collection('bookItemsArray').onSnapshot((snapshot) => {

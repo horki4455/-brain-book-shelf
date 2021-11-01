@@ -126,9 +126,15 @@ import {
   useStore,
 } from '@nuxtjs/composition-api'
 import axios from 'axios'
-// TODO: TSうまくつなぎ込めていない
-import { SelectedBook } from '@/types/books'
 import dayjs from 'dayjs'
+import { BookItem, SerchedBookItem } from '@/types/book'
+
+type BookItemDefault = Omit<BookItem, 'userId' | 'createDay' | 'finishDay'>
+type BookInput = Omit<BookItem, 'finishDay'>
+type SelectedBook = Pick<
+  BookItem,
+  'id' | 'title' | 'author' | 'price' | 'published'
+>
 export default defineComponent({
   props: {
     index: { type: Number },
@@ -137,13 +143,18 @@ export default defineComponent({
   },
   setup(_, { emit }) {
     const store = useStore()
+    // 作成日
     const createDay = dayjs(new Date()).format('YYYY-MM-DD')
+
+    // バリデーション
     const required = (value: string | number) =>
       !!value || '必ず入力してください'
     const limit_length = (value: string | number) =>
       String(value).length <= 30 || '30文字以内で入力してください'
+    const isValid = ref<boolean>(false)
 
-    const bookInput = reactive({
+    // データの入出力
+    const bookInput = reactive<BookInput>({
       id: '',
       title: '',
       think: '',
@@ -155,7 +166,7 @@ export default defineComponent({
       createDay: createDay,
       ratingVal: 0,
     })
-    const defaultbookInput = reactive({
+    const defaultbookInput = reactive<BookItemDefault>({
       id: '',
       title: '',
       think: '',
@@ -165,19 +176,21 @@ export default defineComponent({
       published: '',
       ratingVal: 0,
     })
+    //ダイアログの初期化
     const initDialog = () => {
       Object.assign(bookInput, defaultbookInput)
     }
-    const isValid = ref(false)
+    // 本の作成データの保存・作成
     const addBookData = () => {
       const bookItem = bookInput
       store.dispatch('addBookData', { bookItem })
       initDialog()
       emit('close')
     }
-    let selectedBook = ref('')
-    const getBookDate = (book: any) => {
-      const selectedBook = reactive({
+    // 選択された本の内容
+    let selectedBook = ref<SelectedBook>()
+    const getBookDate = (book: SelectedBook) => {
+      const selectedBook = reactive<SelectedBook>({
         id: book.id,
         title: book.title,
         author: book.author,
@@ -187,8 +200,8 @@ export default defineComponent({
       Object.assign(bookInput, selectedBook)
       GBAcloseDialog()
     }
-    const keyword = ref('')
-    let serchedBookDate = ref([])
+    const keyword = ref<string>('')
+    let serchedBookDate = ref<SerchedBookItem[]>([])
     const getResult = () => {
       axios
         .get(
@@ -196,10 +209,10 @@ export default defineComponent({
         )
         .then((data) => {
           serchedBookDate.value = []
-          for (let b of data.data.items) {
-            let authors = b.volumeInfo.authors
-            let price = b.saleInfo.listPrice
-            let img = b.volumeInfo.imageLinks
+          for (const b of data.data.items) {
+            const authors = b.volumeInfo.authors
+            const price = b.saleInfo.listPrice
+            const img = b.volumeInfo.imageLinks
             serchedBookDate.value.push({
               id: b.id,
               title: b.volumeInfo.title,
@@ -212,7 +225,8 @@ export default defineComponent({
           }
         })
     }
-    const GBAToggleDialog = ref(false)
+    // ダイアログの開閉
+    const GBAToggleDialog = ref<boolean>(false)
     const GBAcloseDialog = () => {
       GBAToggleDialog.value = false
     }
@@ -220,18 +234,18 @@ export default defineComponent({
       // データ
       ...toRefs(bookInput),
       keyword,
+      GBAToggleDialog,
+      isValid,
       // メソッド
       createDay,
       addBookData,
       required,
       limit_length,
-      isValid,
       getBookDate,
       selectedBook,
       getResult,
       serchedBookDate,
       GBAcloseDialog,
-      GBAToggleDialog,
     }
   },
 })

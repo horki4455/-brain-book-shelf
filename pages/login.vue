@@ -62,7 +62,7 @@
         <div class="my-10">
           <div class="d-flex justify-content-end">
             <div>
-              <router-link to="signup">アカウントを作成へ進む</router-link>
+              <router-link to="/signup">アカウントを作成へ進む</router-link>
             </div>
           </div>
         </div>
@@ -78,7 +78,6 @@ import {
   useStore,
   useRouter,
 } from '@nuxtjs/composition-api'
-import { auth } from '@/plugins/firebase'
 
 export default defineComponent({
   setup() {

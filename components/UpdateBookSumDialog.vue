@@ -8,7 +8,6 @@
       </v-card-title>
       <v-card-text>
         <div>
-          <!-- TODO: dateInputとうまくかみ合っていない -->
           <v-row class="mt-2">
             <v-col cols="4">
               <TextInput
@@ -69,7 +68,7 @@
           @click="editBookData()"
           >OK</v-btn
         >
-        <v-btn color="red" width="214" dark rounded @click="deleteBookData()"
+        <v-btn color="red" width="214" dark rounded @click="deleteBookData"
           >delete</v-btn
         >
       </div>
@@ -88,7 +87,8 @@ import {
 } from '@nuxtjs/composition-api'
 import { db } from '@/plugins/firebase'
 import dayjs from 'dayjs'
-import { Books } from '@/types/books'
+import { BookItem } from '@/types/book'
+type GetTableItems = Omit<BookItem, 'createDay'>
 
 export default defineComponent({
   props: {
@@ -107,29 +107,29 @@ export default defineComponent({
     const now = dayjs().format('YYYY-MM-DD')
     const required = (value: any) => !!value || '必ず入力してください'
 
-    const getTableItems = reactive({
+    const getTableItems = reactive<GetTableItems>({
       id: props.tableItems.id ? props.tableItems.id : ' -',
-      author: props.tableItems.author ? props.tableItems.author : '-',
       title: props.tableItems.title,
       think: props.tableItems.think,
       finishDay: props.tableItems.finishDay ? props.tableItems.finishDay : now,
+      author: props.tableItems.author ? props.tableItems.author : '-',
       price: props.tableItems.price ? props.tableItems.price : '-',
       status: props.tableItems.status,
       published: props.tableItems.published ? props.tableItems.published : '-',
       userId: props.tableItems.userId ? props.tableItems.userId : '-',
-      ratingVal: props.tableItems.ratingVal ? props.tableItems.ratingVal : 3,
+      ratingVal: props.tableItems.ratingVal ? props.tableItems.ratingVal : 0,
     })
-    const defaultTableItems = reactive<Books>({
+    const defaultTableItems = reactive<GetTableItems>({
       id: '',
-      author: '',
       title: '',
       think: '',
       finishDay: '',
+      author: '',
       price: '',
       status: '',
       published: '',
       userId: '',
-      ratingVal: '',
+      ratingVal: 0,
     })
 
     const deleteBookData = () => {
@@ -162,7 +162,6 @@ export default defineComponent({
         console.error(e)
       }
     })
-
     return {
       // データ
       getTableItems,

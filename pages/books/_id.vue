@@ -111,36 +111,39 @@ import {
   useStore,
 } from '@nuxtjs/composition-api'
 import { db } from '@/plugins/firebase'
+import { BookItem } from '@/types/book'
+type TableItems = Omit<BookItem, 'createDay'>
+
 export default {
   setup() {
-    const tableItems = reactive({
+    const tableItems = reactive<TableItems>({
       id: '',
       title: '',
-      author: '',
-      finishDay: '',
-      price: '',
-      published: '',
-      status: '',
       think: '',
+      finishDay: '',
+      author: '',
+      price: '',
+      status: '',
+      published: '',
       userId: '',
-      ratingVal: '',
+      ratingVal: 0,
     })
     const route = useRoute()
     const store = useStore()
     const pageId = route.value.params.id
     // 表示データの処理
-    let FetchedbookItem = ref<any>(null)
+    let FetchedbookItem = ref()
     const fetchBook = async () => {
       const docRef = db.collection('bookItemsArray').doc(pageId)
       FetchedbookItem.value = await docRef.get().then((doc) => doc.data())
       tableItems.id = FetchedbookItem.value.bookItem.id
       tableItems.title = FetchedbookItem.value.bookItem.title
-      tableItems.author = FetchedbookItem.value.bookItem.author
-      tableItems.finishDay = FetchedbookItem.value.bookItem.finishDay
-      tableItems.price = FetchedbookItem.value.bookItem.price
-      tableItems.published = FetchedbookItem.value.bookItem.published
-      tableItems.status = FetchedbookItem.value.bookItem.status
       tableItems.think = FetchedbookItem.value.bookItem.think
+      tableItems.finishDay = FetchedbookItem.value.bookItem.finishDay
+      tableItems.author = FetchedbookItem.value.bookItem.author
+      tableItems.price = FetchedbookItem.value.bookItem.price
+      tableItems.status = FetchedbookItem.value.bookItem.status
+      tableItems.published = FetchedbookItem.value.bookItem.published
       tableItems.userId = FetchedbookItem.value.bookItem.userId
       tableItems.ratingVal = FetchedbookItem.value.bookItem.ratingVal
     }
@@ -153,15 +156,15 @@ export default {
       }
     })
 
-    const ToggleDialog = ref(false)
+    const ToggleDialog = ref<boolean>(false)
     const closeDialog = () => {
       ToggleDialog.value = false
     }
     return {
       ...toRefs(tableItems),
       tableItems,
-      // メソッド
       ToggleDialog,
+      // メソッド
       closeDialog,
       isValid,
       fetchBook,
