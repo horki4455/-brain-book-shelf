@@ -132,14 +132,13 @@ export default defineComponent({
       }
     })
     // ダイアログ開閉機能
-    const ToggleDialog = ref(false)
+    const ToggleDialog = ref<boolean>(false)
     const closeDialog = () => {
       ToggleDialog.value = false
     }
 
     // 詳細遷移処理
     const moveToDetail = (id: number) => {
-      console.log(id)
       router.push(`books/${id}`)
     }
     // 一覧取得機能
