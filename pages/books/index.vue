@@ -2,14 +2,7 @@
   <div>
     <div class="d-flex justify-content-end">
       <!-- 作成ボタン -->
-      <v-btn
-        color="red lighten-2"
-        dark
-        rounded
-        width="214"
-        @click="ToggleDialog = true"
-        >読書データの作成</v-btn
-      >
+      <RoundedButton text="読書データの作成" color="red" @click="openDialog" />
     </div>
     <div class="text-muted small my-6 ml-4">
       読んだ本のページ一覧ページです
@@ -50,23 +43,17 @@
     >
       <!-- 上のやつの説明：any型のデータが渡って（emitされて）きているので、それを受け取る＄event -->
       <template v-slot:item.bookItem.title="{ item }">
-        <v-icon v-if="isMine(item.bookItem.userId)" class="mr-3"
-          >mdi-chevron-triple-right</v-icon
-        >
-        {{ item.bookItem.title }}
+        <span v-if="isMine(item.bookItem.userId)">
+          <v-icon color="red" class="mr-3">mdi-application-edit-outline</v-icon>
+        </span>
+        <span v-else><v-icon class="mr-3">mdi-archive-cancel </v-icon></span>
+        <span> {{ item.bookItem.title }}</span>
       </template>
+
       <template v-slot:item.bookItem.status="{ item }">
         <v-chip small dark :color="filterTagColor(item.bookItem.status)">{{
           item.bookItem.status
         }}</v-chip>
-      </template>
-
-      <template v-slot:item.bookItem.edit>
-        <div>
-          <v-btn>
-            <v-icon color="info">mdi-pencil</v-icon>
-          </v-btn>
-        </div>
       </template>
     </v-data-table>
     <!-- ダイアログ -->
@@ -115,7 +102,6 @@ export default defineComponent({
       { text: '著者', value: 'bookItem.author' },
       { text: '発刊日', value: 'bookItem.published' },
       { text: 'タグ', value: 'bookItem.status' },
-      { text: '編集', value: 'bookItem.edit' },
     ]
     const searchKeys = reactive({
       title: '',
@@ -133,6 +119,10 @@ export default defineComponent({
     })
     // ダイアログ開閉機能
     const ToggleDialog = ref<boolean>(false)
+    const openDialog = () => {
+      ToggleDialog.value = true
+    }
+
     const closeDialog = () => {
       ToggleDialog.value = false
     }
@@ -176,6 +166,7 @@ export default defineComponent({
       filterTagColor,
       filteredTag,
       closeDialog,
+      openDialog,
       isMine,
     }
   },

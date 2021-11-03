@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="font-size">本の評価</div>
-    <div class="rating-style">
+    <div class="rating-style mb-11">
       <v-rating
         empty-icon="mdi-star-outline"
         full-icon="mdi-star"

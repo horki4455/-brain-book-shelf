@@ -48,25 +48,26 @@
         </v-form>
       </v-card-text>
       <v-card-actions class="d-flex justify-content-center">
-        <v-btn color="red" width="214" dark rounded @click="$emit('close')"
-          >cancel</v-btn
-        >
+        <RoundedButton
+          text="cancel"
+          color="red lighten-2"
+          @click="$emit('close')"
+          class="mr-2"
+        />
         <v-btn
-          color="blue"
+          color="blue lighten-2"
           width="214"
           rounded
           :disabled="!isValid"
           @click="addBookData"
+          class="mr-3"
           >OK</v-btn
         >
-        <v-btn
+        <RoundedButton
+          text="本のデータの検索"
           color="green lighten-2"
-          dark
-          rounded
-          width="214"
           @click="GBAToggleDialog = true"
-          >本のデータの検索</v-btn
-        >
+        />
       </v-card-actions>
     </v-card>
     <v-dialog v-model="GBAToggleDialog">
@@ -75,16 +76,17 @@
           <p class="my-5">本を検索し、クリックしてください</p>
           <TextInput v-model="keyword" label="本を検索" />
           <v-card-actions class="d-flex justify-content-center">
-            <v-btn
-              color="red"
-              width="214"
-              rounded
+            <RoundedButton
+              class="mr-2"
+              text="閉じる"
               @click="GBAToggleDialog = false"
-              >閉じる</v-btn
-            >
-            <v-btn color="green" width="214" rounded @click="getResult"
-              >検索</v-btn
-            >
+            />
+            <RoundedButton
+              class="mr-2"
+              text="検索"
+              color="green"
+              @click="getResult"
+            />
           </v-card-actions>
         </div>
         <div>

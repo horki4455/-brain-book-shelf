@@ -50,27 +50,19 @@
       </v-card-text>
       <!-- TODO: ボタンの固定 -->
       <div class="d-flex justify-content-center">
-        <v-btn
+        <RoundedButton
           class="mr-5"
+          text="cancel"
           color="blue"
-          width="214"
-          dark
-          rounded
           @click="$emit('close')"
-          >cancel</v-btn
-        >
-        <v-btn
+        />
+        <RoundedButton
           class="mr-5"
+          text="OK"
           color="green"
-          width="214"
-          dark
-          rounded
-          @click="editBookData()"
-          >OK</v-btn
-        >
-        <v-btn color="red" width="214" dark rounded @click="deleteBookData"
-          >delete</v-btn
-        >
+          @click="editBookData"
+        />
+        <RoundedButton class="mr-5" text="delete" @click="deleteBookData" />
       </div>
     </v-card>
   </div>

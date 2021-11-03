@@ -1,15 +1,12 @@
 <template>
   <div>
     <div class="d-flex justify-content-end">
-      <v-btn
-        color="red lighten-2"
-        dark
-        rounded
+      <RoundedButton
+        text="編集"
+        color="red"
+        @click="openDialog"
         :disabled="!isValid"
-        width="214"
-        @click="ToggleDialog = true"
-        >編集</v-btn
-      >
+      />
     </div>
 
     <!-- 編集ダイアログ -->
@@ -157,6 +154,9 @@ export default {
     })
 
     const ToggleDialog = ref<boolean>(false)
+    const openDialog = () => {
+      ToggleDialog.value = true
+    }
     const closeDialog = () => {
       ToggleDialog.value = false
     }
@@ -168,6 +168,7 @@ export default {
       closeDialog,
       isValid,
       fetchBook,
+      openDialog,
     }
   },
 }

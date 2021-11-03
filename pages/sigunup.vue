@@ -28,9 +28,7 @@
     </v-form>
 
     <div class="d-flex justify-content-center">
-      <v-btn color="red lighten-2" dark rounded width="214" @click="signUp"
-        >登録</v-btn
-      >
+      <RoundedButton class="mr-5" text="登録" @click="signUp" />>
     </div>
     <div class="d-flex justify-content-end mt-5">
       <router-link class="router" to="login">ログイン画面へ戻る</router-link>
