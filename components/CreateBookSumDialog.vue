@@ -38,16 +38,21 @@
                 <TextInput label="発行日" v-model="published" :counter="10" />
               </v-col>
               <v-col cols="4">
-                <Rating v-model="ratingVal" />
+                <div class="rating-style">
+                  <Rating v-model="ratingVal" />
+                </div>
               </v-col>
             </v-row>
             <div class="my-9">
-              <v-textarea v-model="think" outlined label="要約/感想" />
+              <v-textarea v-model="description" outlined label="要約" />
+            </div>
+            <div class="my-9">
+              <v-textarea v-model="think" outlined label="感想" />
             </div>
           </div>
         </v-form>
       </v-card-text>
-      <v-card-actions class="d-flex justify-content-center">
+      <v-card-actions class="d-flex justify-content-center pb-5">
         <RoundedButton
           text="cancel"
           color="red lighten-2"
@@ -89,29 +94,36 @@
             />
           </v-card-actions>
         </div>
-        <div>
-          <div
-            v-for="(book, i) of serchedBookDate"
-            :index="i + 1"
-            :key="book.isbn"
-          >
+        <!-- 検索後に開く画面 -->
+        <div class="mt-4">
+          <div v-for="book of serchedBookDate" :key="book.isbn">
             <div
               class="clearfix"
               :class="{ linkable }"
               @click="getBookDate(book)"
             >
-              <div class="image">
-                <img :src="book.image" />
-              </div>
-              <div class="details">
-                <ul>
-                  <li v-if="index">{{ index }}.</li>
-                  <li>{{ book.title }}（{{ book.price }}円）</li>
-                  <li>{{ book.author }} 著</li>
-                  <li>{{ book.publisher }} /刊</li>
-                  <li>{{ book.published }} /発売</li>
-                </ul>
-              </div>
+              <v-card outlined class="mb-3 pa-3">
+                <v-row>
+                  <v-col cols="3">
+                    <div class="image">
+                      <img :src="book.image" />
+                    </div>
+                  </v-col>
+                  <v-col cols="9">
+                    <div class="details">
+                      <ul>
+                        <li class="pb-3">
+                          {{ book.title }}（{{ book.price }}円）
+                        </li>
+                        <li>詳細：{{ omittedText(book.description) }}</li>
+                        <li>{{ book.author }} 著</li>
+                        <li>{{ book.publisher }} /刊</li>
+                        <li>{{ book.published }} /発売</li>
+                      </ul>
+                    </div>
+                  </v-col>
+                </v-row>
+              </v-card>
             </div>
           </div>
         </div>
@@ -135,7 +147,7 @@ type BookItemDefault = Omit<BookItem, 'userId' | 'createDay' | 'finishDay'>
 type BookInput = Omit<BookItem, 'finishDay'>
 type SelectedBook = Pick<
   BookItem,
-  'id' | 'title' | 'author' | 'price' | 'published'
+  'id' | 'title' | 'description' | 'author' | 'price' | 'published'
 >
 export default defineComponent({
   props: {
@@ -159,6 +171,7 @@ export default defineComponent({
     const bookInput = reactive<BookInput>({
       id: '',
       title: '',
+      description: '',
       think: '',
       author: '',
       price: '',
@@ -171,6 +184,7 @@ export default defineComponent({
     const defaultbookInput = reactive<BookItemDefault>({
       id: '',
       title: '',
+      description: '',
       think: '',
       author: '',
       price: '',
@@ -195,12 +209,17 @@ export default defineComponent({
       const selectedBook = reactive<SelectedBook>({
         id: book.id,
         title: book.title,
+        description: book.description,
         author: book.author,
         price: book.price,
         published: book.published,
       })
       Object.assign(bookInput, selectedBook)
       GBAcloseDialog()
+    }
+    const omittedText = (text: string | number) => {
+      const toString = String(text)
+      return toString.length > 250 ? toString.slice(0, 250) + '…' : toString
     }
     const keyword = ref<string>('')
     let serchedBookDate = ref<SerchedBookItem[]>([])
@@ -215,9 +234,11 @@ export default defineComponent({
             const authors = b.volumeInfo.authors
             const price = b.saleInfo.listPrice
             const img = b.volumeInfo.imageLinks
+            const description = b.volumeInfo.description
             serchedBookDate.value.push({
               id: b.id,
               title: b.volumeInfo.title,
+              description: description ? description : '',
               author: authors ? authors.join(',') : '',
               price: price ? price.amount : '-',
               publisher: b.volumeInfo.publisher,
@@ -248,6 +269,7 @@ export default defineComponent({
       getResult,
       serchedBookDate,
       GBAcloseDialog,
+      omittedText,
     }
   },
 })
@@ -287,5 +309,9 @@ export default defineComponent({
   content: '';
   display: block;
   clear: both;
+}
+.rating-style {
+  outline: 0.5px solid black;
+  opacity: 0.6;
 }
 </style>

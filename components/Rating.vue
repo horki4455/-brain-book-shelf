@@ -1,7 +1,6 @@
 <template>
   <div>
-    <div class="font-size">本の評価</div>
-    <div class="rating-style mb-11">
+    <div class="mb-11">
       <v-rating
         empty-icon="mdi-star-outline"
         full-icon="mdi-star"
@@ -34,10 +33,6 @@ export default defineComponent({
 })
 </script>
 <style scoped>
-.rating-style {
-  outline: 0.5px solid black;
-  opacity: 0.6;
-}
 .font-size {
   font-size: 0.125rem;
   margin-bottom: 3px;

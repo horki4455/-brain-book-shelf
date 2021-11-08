@@ -24,77 +24,60 @@
       <br />自分の投稿の場合、編集・削除を行えます。要約を読み返し、自分の知識を深めましょう。
     </div>
     <h3 class="border-bottom border-secondary" style="padding: 10px">
-      <v-icon class="pr-3">mdi-chevron-triple-right</v-icon>情報詳細
+      <v-icon class="pr-3">mdi-chevron-triple-right</v-icon>
+
+      <span class="text-center title-wrapper">{{ title }}</span>
     </h3>
-    <div>
-      <v-row class="mt-2">
-        <v-col cols="12"> </v-col>
-        <v-col cols="4">
-          <TextInput
-            label="タイトル"
-            v-model="title"
-            readonly
-            :clearable="false"
-          />
-        </v-col>
-        <v-col cols="4">
-          <TextInput label="ID" v-model="id" readonly :clearable="false" />
-        </v-col>
-        <v-col cols="4">
-          <TextInput
-            label="著者"
-            v-model="author"
-            readonly
-            :clearable="false"
-          />
-        </v-col>
-      </v-row>
-      <v-row class="mt-0">
-        <v-col cols="4">
-          <TextInput label="価格" v-model="price" readonly :clearable="false" />
-        </v-col>
-        <v-col cols="4">
-          <TextInput
-            label="ステータス"
-            v-model="status"
-            readonly
-            :clearable="false"
-          />
-        </v-col>
-        <v-col cols="4">
-          <TextInput
-            label="発刊日"
-            v-model="published"
-            readonly
-            :clearable="false"
-          />
-        </v-col>
-        <v-col cols="4">
-          <TextInput
-            label="読了日"
-            v-model="finishDay"
-            readonly
-            :clearable="false"
-          />
-        </v-col>
-        <v-col cols="4">
-          <TextInput
-            label="ユーザーID"
-            v-model="userId"
-            readonly
-            :clearable="false"
-          />
-        </v-col>
-        <v-col cols="4">
-          <Rating v-model="ratingVal" readonly />
-        </v-col>
-      </v-row>
-      <div class="my-9">
-        <v-textarea v-model="think" outlined readonly label="要約/感想" />
-      </div>
-      <div class="float-right mb-5">
-        <nuxt-link to="/books">一覧へ戻る</nuxt-link>
-      </div>
+    <div class="d-flex justify-content-center">
+      <v-col cols="8">
+        <div>
+          <v-row class="mt-2">
+            <v-col cols="8">
+              <img
+                class="img mb-4 ml-3"
+                src="@/assets/bookImage.jpeg"
+                height="300"
+              />
+            </v-col>
+            <v-col cols="4">
+              <h5 class="py-3 text-wrapper">著者:{{ author }}</h5>
+              <h5 class="pb-5">発刊日: {{ published }}</h5>
+              <h5 class="pb-5">価格: {{ price }}円</h5>
+              <h5 class="pb-5">ステータス: {{ status }}</h5>
+
+              <Rating v-model="ratingVal" readonly />
+            </v-col>
+          </v-row>
+          <hr />
+          <div class="my-9 textarea-wrapper">
+            <v-textarea
+              v-model="description"
+              outlined
+              readonly
+              label="要約"
+              auto-grow
+            />
+          </div>
+          <hr />
+          <div class="my-9">
+            <v-textarea v-model="think" outlined readonly label="感想" />
+          </div>
+          <hr />
+          <v-row class="mt-0">
+            <v-col cols="4">
+              <TextInput
+                label="読了日"
+                v-model="finishDay"
+                readonly
+                :clearable="false"
+              />
+            </v-col>
+          </v-row>
+          <div class="float-right mb-5">
+            <nuxt-link to="/books">一覧へ戻る</nuxt-link>
+          </div>
+        </div>
+      </v-col>
     </div>
   </div>
 </template>
@@ -106,6 +89,7 @@ import {
   toRefs,
   reactive,
   useStore,
+  onMounted,
 } from '@nuxtjs/composition-api'
 import { db } from '@/plugins/firebase'
 import { BookItem } from '@/types/book'
@@ -116,6 +100,7 @@ export default {
     const tableItems = reactive<TableItems>({
       id: '',
       title: '',
+      description: '',
       think: '',
       finishDay: '',
       author: '',
@@ -135,6 +120,7 @@ export default {
       FetchedbookItem.value = await docRef.get().then((doc) => doc.data())
       tableItems.id = FetchedbookItem.value.bookItem.id
       tableItems.title = FetchedbookItem.value.bookItem.title
+      tableItems.description = FetchedbookItem.value.bookItem.description
       tableItems.think = FetchedbookItem.value.bookItem.think
       tableItems.finishDay = FetchedbookItem.value.bookItem.finishDay
       tableItems.author = FetchedbookItem.value.bookItem.author
@@ -144,7 +130,9 @@ export default {
       tableItems.userId = FetchedbookItem.value.bookItem.userId
       tableItems.ratingVal = FetchedbookItem.value.bookItem.ratingVal
     }
-    fetchBook() //結局createdと同じタイミング
+    onMounted(() => {
+      fetchBook()
+    })
     const isValid = computed(() => {
       if (store.getters.getUserUid === tableItems.userId) {
         return true
@@ -173,3 +161,20 @@ export default {
   },
 }
 </script>
+<style scoped>
+.text-wrapper {
+  background: #cde4ff;
+  border-top: solid 5px #5989cf;
+  border-bottom: solid 5px #5989cf;
+}
+</style>
+
+<style scoped>
+.title-wrapper {
+  font-weight: bold;
+  font-size: 30px;
+}
+.v-input {
+  cursor: pointer;
+}
+</style>

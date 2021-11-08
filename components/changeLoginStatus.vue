@@ -24,13 +24,6 @@
               </v-list-item-title>
             </v-list-item-content>
           </v-list-item>
-          <v-list-item>
-            <v-list-item-content>
-              <v-list-item-title>
-                <router-link to="/mypage">マイページ</router-link>
-              </v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
         </v-list>
       </v-menu>
     </v-toolbar-items>
