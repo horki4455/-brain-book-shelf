@@ -5,14 +5,14 @@
         <template v-slot:activator="{ on }">
           <v-btn class="text-white" v-on="on" text>
             <div v-if="userStatus">
-              <p>
+              <u class="mt-4">
                 ユーザー名:
                 {{
                   $store.getters.getUserName
                     ? $store.getters.getUserName
                     : currentUserEmail
                 }}
-              </p>
+              </u>
             </div>
           </v-btn>
         </template>
