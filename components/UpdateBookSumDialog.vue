@@ -3,6 +3,7 @@
     <v-card>
       <v-card-title class="d-flex justify-content-center">
         <span>読書データの編集</span>
+        {{ pageUrlId }}
         <!-- TODO:ロード中の処理追加 -->
         <spacer />
       </v-card-title>
@@ -28,13 +29,13 @@
               <TextInput label="発行日" v-model="published" />
             </v-col>
             <v-col cols="4">
-              <DateInput label="価格" v-model="price" />
+              <TextInput label="価格" v-model="price" />
             </v-col>
             <v-col cols="4">
               <SelectInput label="タグ" v-model="status" />
             </v-col>
             <v-col cols="4">
-              <DateInput label="ユーザー" v-model="userId" readonly />
+              <TextInput label="ユーザー" v-model="userId" readonly />
             </v-col>
             <v-col cols="4">
               <DateInput label="読了日" v-model="finishDay" />
@@ -44,46 +45,41 @@
             </v-col>
           </v-row>
           <div class="my-9">
-            <v-textarea v-model="think" outlined label="要約/感想" />
+            <v-textarea v-model="think" outlined label="要約" />
+          </div>
+          <div class="my-9">
+            <v-textarea v-model="think" outlined label="感想" />
           </div>
         </div>
       </v-card-text>
       <!-- TODO: ボタンの固定 -->
-      <div class="d-flex justify-content-center">
-        <v-btn
+      <div class="d-flex justify-content-center pb-5">
+        <RoundedButton
           class="mr-5"
+          text="cancel"
           color="blue"
-          width="214"
-          dark
-          rounded
           @click="$emit('close')"
-          >cancel</v-btn
-        >
-        <v-btn
+        />
+        <RoundedButton
           class="mr-5"
+          text="OK"
           color="green"
-          width="214"
-          dark
-          rounded
-          @click="editBookData()"
-          >OK</v-btn
-        >
-        <v-btn color="red" width="214" dark rounded @click="deleteBookData"
-          >delete</v-btn
-        >
+          @click="editBookData"
+        />
+        <RoundedButton class="mr-5" text="delete" @click="deleteBookData" />
       </div>
     </v-card>
   </div>
 </template>
 <script lang="ts">
 import {
-  ref,
   defineComponent,
   toRefs,
   reactive,
-  useFetch,
+  onMounted,
   useStore,
   useRouter,
+  useRoute,
 } from '@nuxtjs/composition-api'
 import { db } from '@/plugins/firebase'
 import dayjs from 'dayjs'
@@ -103,13 +99,18 @@ export default defineComponent({
   },
   setup(props, { emit }) {
     const router = useRouter()
+    const route = useRoute()
+
+    const pageUrlId = route.value.params.id
     const store = useStore()
     const now = dayjs().format('YYYY-MM-DD')
-    const required = (value: any) => !!value || '必ず入力してください'
+    const required = (value: string | number) =>
+      !!value || '必ず入力してください'
 
     const getTableItems = reactive<GetTableItems>({
       id: props.tableItems.id ? props.tableItems.id : ' -',
       title: props.tableItems.title,
+      description: props.tableItems.description,
       think: props.tableItems.think,
       finishDay: props.tableItems.finishDay ? props.tableItems.finishDay : now,
       author: props.tableItems.author ? props.tableItems.author : '-',
@@ -122,6 +123,7 @@ export default defineComponent({
     const defaultTableItems = reactive<GetTableItems>({
       id: '',
       title: '',
+      description: '',
       think: '',
       finishDay: '',
       author: '',
@@ -131,28 +133,33 @@ export default defineComponent({
       userId: '',
       ratingVal: 0,
     })
+    const updatePageId = props.pageId ? props.pageId : props.tableItems.pageId
 
     const deleteBookData = () => {
-      db.collection('bookItemsArray').doc(props.pageId).delete()
+      db.collection('bookItemsArray').doc(updatePageId).delete()
       // TODO: 一回削除確認ダイアログ挟む
-      router.push('/books')
+      if (pageUrlId === 'books') {
+        emit('close')
+      } else {
+        router.push('/books')
+      }
     }
     // TODO: 例外処理敷く
     const editBookData = () => {
       db.collection('bookItemsArray')
-        .doc(props.pageId)
+        .doc(updatePageId)
         .update({ bookItem: defaultTableItems })
       emit('fetch')
       emit('close')
     }
     // TODO: useFecthのメリット行かせていない。moutedで良いかも。
-    useFetch(async () => {
+    onMounted(async () => {
       try {
         db.collection('bookItemsArray').onSnapshot((snapshot) => {
           store.commit('clearBookData')
           snapshot.forEach((doc) => {
-            let data = doc.data()
-            let id = { id: doc.id }
+            const data = doc.data()
+            const id = { id: doc.id }
             const content = { ...data, ...id }
             store.commit('addBookData', content)
             Object.assign(defaultTableItems, getTableItems)
@@ -166,6 +173,7 @@ export default defineComponent({
       // データ
       getTableItems,
       now,
+      pageUrlId,
       ...toRefs(defaultTableItems),
       // メソッド
       deleteBookData,

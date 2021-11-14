@@ -31,32 +31,26 @@
           </div>
 
           <div class="d-flex justify-content-center">
-            <v-btn
+            <RoundedButton
+              text="テストユーザーでログイン"
               color="green lighten-2"
-              dark
-              rounded
-              width="214"
-              @click="testLogin()"
-              >テストユーザーでログイン</v-btn
-            >
-            <v-btn
-              class="ml-3"
+              @click="testLogin"
+              class="mr-2"
+            />
+
+            <RoundedButton
+              text="メールアドレスでログイン"
               color="blue lighten-2"
-              dark
-              rounded
-              width="214"
-              @click="emailLogin()"
-              >メールアドレスでログイン</v-btn
-            >
-            <v-btn
+              @click="emailLogin"
+              class="mr-2"
+            />
+
+            <RoundedButton
+              text="googleでログイン"
               color="red lighten-2"
-              dark
-              rounded
-              width="214"
-              @click="doGoogleLogin()"
-              class="ml-3"
-              >googleでログイン</v-btn
-            >
+              @click="doGoogleLogin"
+              class="mr-2"
+            />
           </div>
         </v-form>
         <div class="my-10">

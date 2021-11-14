@@ -1,7 +1,7 @@
 <template>
   <div>
-    <div class="d-flex justify-center font">
-      <v-icon class="mr-2">mdi-chevron-triple-right</v-icon>{{ message }}
+    <div class="ml-4 font text-center">
+      <v-icon class="mr-2" large>mdi-chevron-triple-right</v-icon>{{ message }}
     </div>
     <div class="line" />
   </div>
@@ -26,7 +26,8 @@ export default defineComponent({
   margin-bottom: 5px;
 }
 .font {
-  font-size: 1.3rem;
+  font-size: 3.3rem;
   font-family: 'Comic Sans MS';
+  font-weight: bold;
 }
 </style>

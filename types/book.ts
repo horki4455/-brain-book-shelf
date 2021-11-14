@@ -1,6 +1,7 @@
 export type BookItem = {
   id: string
   title: string
+  description: string
   think: string
   finishDay: string
   author: string
@@ -14,6 +15,7 @@ export type BookItem = {
 export type SerchedBookItem = {
   id: string
   title: string
+  description: string
   author: string
   price: string
   publisher: string

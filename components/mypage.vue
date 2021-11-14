@@ -1,29 +1,34 @@
 <template>
   <div>
-    <h3 class="text-center my-5">マイ読書データ</h3>
-    <v-card outlined>
-      <div class="text-center my-5">
-        {{
+    <hr />
+    <div class="text-center mypage-wrapper">
+      <u class="mypage-text-wrapper">
+        <!-- {{
           $store.getters.getUserName
             ? $store.getters.getUserName
             : currentUserEmail
-        }}さんこんにちは！
-      </div>
-      <v-row class="d-flex justify-content-center py-5 my-3 ml-3">
-        <v-col cols="4">
-          <div class="mb-3">
-            これまであなたがまとめた本は {{ totalBookData }}冊 です！
-            {{ nowDate }}
-          </div>
-        </v-col>
-      </v-row>
-    </v-card>
+        }} -->
+        ユーザーネーム
+        <!-- TODO:マイページへのリンクの作成-->
+      </u>
+      さんこんにちは！
+    </div>
+    <v-row class="d-flex justify-content-center mypage-wrapper">
+      <v-col cols="6">
+        <div class="mb-3">
+          これまであなたがまとめた本は
+          <span class="mypage-text-wrapper"> {{ totalBookData }}冊 </span>
+          です！
+        </div>
+      </v-col>
+    </v-row>
+    <hr />
   </div>
 </template>
 <script lang="ts">
 import {
   defineComponent,
-  useFetch,
+  onMounted,
   useStore,
   computed,
 } from '@nuxtjs/composition-api'
@@ -41,7 +46,7 @@ export default defineComponent({
     })
     const currentUserEmail = store.getters.getCurrentUserEmail
 
-    useFetch(async () => {
+    onMounted(async () => {
       try {
         db.collection('bookItemsArray').onSnapshot((snapshot) => {
           store.commit('clearBookData')
@@ -65,3 +70,11 @@ export default defineComponent({
   },
 })
 </script>
+<style scoped>
+.mypage-wrapper {
+  font-weight: bold;
+}
+.mypage-text-wrapper {
+  font-size: 3rem;
+}
+</style>
