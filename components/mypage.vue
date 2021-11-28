@@ -15,9 +15,14 @@
     </div>
     <v-row class="d-flex justify-content-center mypage-wrapper">
       <v-col cols="6">
-        <div class="mb-3">
+        <div v-if="!$vuetify.breakpoint.smAndDown" class="mb-3">
           これまであなたがまとめた本は
           <span class="mypage-text-wrapper"> {{ totalBookData }}冊 </span>
+          です！
+        </div>
+        <div v-else class="mb-3">
+          これまであなたがまとめた本は
+          <span class="under-sm-text-wrapper"> {{ totalBookData }}冊 </span>
           です！
         </div>
       </v-col>
@@ -76,5 +81,8 @@ export default defineComponent({
 }
 .mypage-text-wrapper {
   font-size: 3rem;
+}
+.under-sm-text-wrapper {
+  font-size: 2rem;
 }
 </style>

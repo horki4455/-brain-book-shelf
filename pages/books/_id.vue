@@ -19,7 +19,7 @@
       />
     </v-dialog>
     <!-- TODO: i18n化してコンポーネントに切り分け-->
-    <div class="text-muted small my-6 ml-4">
+    <div class="text-muted small my-6 ml-4 hidden-sm-and-down">
       読んだ本のページ詳細ページです
       <br />自分の投稿の場合、編集・削除を行えます。要約を読み返し、自分の知識を深めましょう。
     </div>

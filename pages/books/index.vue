@@ -4,7 +4,7 @@
     <div class="d-flex justify-content-end my-5">
       <v-row>
         <v-col cols="6">
-          <div class="text-muted small mb-5">
+          <div class="text-muted small mb-5 hidden-sm-and-down">
             読んだ本のページ一覧ページです
             <br />作成・編集・一覧の確認を行えます。読み解したい内容を一覧で確認しましょう。
           </div>

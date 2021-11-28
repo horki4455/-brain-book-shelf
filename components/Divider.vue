@@ -1,7 +1,10 @@
 <template>
   <div>
-    <div class="ml-4 font text-center">
+    <div v-if="!$vuetify.breakpoint.smAndDown" class="ml-4 font text-center">
       <v-icon class="mr-2" large>mdi-chevron-triple-right</v-icon>{{ message }}
+    </div>
+    <div v-else class="font-under-sm text-center">
+      <v-icon class="mr-2">mdi-chevron-triple-right</v-icon>{{ message }}
     </div>
     <div class="line" />
   </div>
@@ -27,6 +30,11 @@ export default defineComponent({
 }
 .font {
   font-size: 3.3rem;
+  font-family: 'Comic Sans MS';
+  font-weight: bold;
+}
+.font-under-sm {
+  font-size: 2.3rem;
   font-family: 'Comic Sans MS';
   font-weight: bold;
 }

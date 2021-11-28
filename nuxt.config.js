@@ -40,7 +40,21 @@ export default {
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
-  modules: ['bootstrap-vue/nuxt'],
+  modules: ['bootstrap-vue/nuxt', '@nuxtjs/pwa'],
+  manifest: {
+    name: 'サイト名',
+    lang: 'ja',
+    short_name: 'サイト名',
+    title: 'サイト名',
+    'og:title': 'サイト名',
+    description: 'サイトの説明',
+    'og:description': 'サイトの説明',
+    theme_color: '#163956',
+    background_color: '#163956',
+  },
+  workbox: {
+    dev: false,
+  },
   router: {
     middleware: 'authenticator',
   },

@@ -19,9 +19,11 @@
     <div>言語：　typescript（基本的なインターフェース・型の種類の使用)</div>
     <div>FW：　nuxt(compositionAPI)</div>
     <div>UI関連：　vuetify/bootstrap/css</div>
-    <div>バックエンド・サーバーの代わり：firebase cloud storage</div>
+    <div>バックエンド・サーバー：firebase cloud storage</div>
     <div>ログイン・認証周り：firebase auth</div>
-    <div>store管理: vuex</div>
+    <div>store管理: vuex ＝＞　pinia に移行中</div>
+    <div>PWA化済み</div>
+    <div>一部レスポンシブ対応済み</div>
   </div>
 </template>
 <script>
