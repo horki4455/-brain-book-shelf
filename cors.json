@@ -1,0 +1,13 @@
+[
+  {
+    "origin": [
+      "https://brain-bookshalf.appspot.com.com",
+      "http://localhost:8080",
+      "http://localhost:5000",
+      "http://localhost:3000"
+    ],
+    "responseHeader": ["*"],
+    "method": ["GET"],
+    "maxAgeSeconds": 3600
+  }
+]

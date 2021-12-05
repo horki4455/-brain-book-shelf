@@ -1,5 +1,6 @@
 <template>
   <div>
+    <ImageTransaction />
     <Divider message="本データ一覧" />
     <div class="d-flex justify-content-end my-5">
       <v-row>
@@ -50,7 +51,7 @@
       no-data-text="データがありません"
       outlined
       :search="title"
-      items-per-page="50"
+      :items-per-page="50"
     >
       <!-- ここの場合は、左がヘッダーの値、右がテーブルからもらうitemそのものぽい。普通より特殊だと思う。-->
       <template v-slot:item.bookItem.title="{ item }">
