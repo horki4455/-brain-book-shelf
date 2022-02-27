@@ -23,15 +23,31 @@ Vueとfirestoreを利用してアプリケーションを作ってみたいと�
 これまで、バックエンドを作って、インフラ構築してという部分が大きな手間だったが、firebaseを利用してサクッと作ってみたい  
 この先はPiniaなどを利用したものでvuexを変えてみたい  
 
-## 実装機の一覧  
-    ・言語：　typescript（基本的なインターフェース・型の種類の使用)  
-    ・FW：　nuxt(compositionAPI)  
-    ・UI関連：　vuetify/bootstrap/css  
-    ・バックエンド・サーバーの代わり：firebase cloud storage  
-    ・ログイン・認証周り：firebase auth  
-    ・store管理: vuex  
-    ・UI関連：　vuetify/bootstrap/css  
- 
+## アプリの説明  
+デプロイ先：
+https://brain-bookshalf.firebaseapp.com/login/
+
+実装機能  
+firebase 使用機能一覧  
+・auth （メルアドログイン・グーグルログイン・新規登録機能）  
+・store croud 機能、リアルタイム同期機能   
+・デプロイ firebase hosting  
+
+nuxt の機能一覧  
+・compositionAPI  
+・typescript  
+ ・vuex でfirebase関連処理  
+・middlware で認証管理  
+・Google Books APIから書籍データの取得  
+・SPAで作成  
+
+UI (vuetify、bootstrap）  
+・v-select/v-date-picker/等をラップしコンポーネント化  
+・v-data-tableその他各種vuetifyの機能を使用。  
+
+Typescript
+・基本的な型付  
+・interfaceの作成中  
 ## 作ってみた結論
 ・firebase神！！！！！！！！
 
